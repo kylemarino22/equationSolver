@@ -13,6 +13,8 @@ public class Main {
 
      Class eqOb{
 
+     Stack Overflow info on how to do:
+     https://stackoverflow.com/questions/395816/function-pointers-delegates-in-java
      Hashmap of functions:
      a 6,x
      d c,3
