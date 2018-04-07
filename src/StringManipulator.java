@@ -75,16 +75,17 @@ public abstract class StringManipulator {
                 continue;
             }
 
-            char c = s.charAt(operatorPos + i);
 
-            if(operatorPos + i -1< 0){
-                return s.substring(i, operatorPos + i );
+
+            if(operatorPos + i+1> s.length()){
+                return s.substring(operatorPos+1, operatorPos + i );
             }
             else{
+                char c = s.charAt(operatorPos + i);
                 if(findFirstChar(0, c, s) < 0){
                     //not in the valid array
                     if(c == '-'){
-                        return s.substring(i, i + operatorPos);
+                        return s.substring(operatorPos+1, i + operatorPos);
                     }
                     if(c == 't'){
                         return "t";
@@ -93,7 +94,7 @@ public abstract class StringManipulator {
                         return "x";
                     }
 
-                    return s.substring(i, i + operatorPos);
+                    return s.substring(operatorPos+1, i + operatorPos);
 
                 }
             }

@@ -13,8 +13,9 @@ public class EquationLoader extends StringManipulator{
         System.out.println(findFirstChar(18, 'l', mainString));
         System.out.println(selectParentheses(mainString));
 
-        String s = "t*32";
-        System.out.println(leftofOperator(findFirstChar(0, '*', s), s));
+        String s = "69^2.134123";
+        System.out.println(exponentCompile(s));
+//        System.out.println(rightofOperator(findFirstChar(0, '^', s), s));
     }
 
 
@@ -53,11 +54,11 @@ public class EquationLoader extends StringManipulator{
                return workString;
            }
            String inputA = leftofOperator(caratPos, workString);
-           if(inputA == "x"){
+           if(inputA.equals("x")){
                //10
                command = command | 1;
            }
-           else if(inputA == "t"){
+           else if(inputA.equals("t")){
                command = command | 2;
                //01
 
@@ -66,11 +67,11 @@ public class EquationLoader extends StringManipulator{
                numericalA = Double.parseDouble(inputA);
            }
            String inputB = rightofOperator(caratPos, workString);
-            if(inputB == "x"){
+            if(inputB.equals("x")){
                 //0010
                 command = command | 4;
             }
-            else if(inputB == "t"){
+            else if(inputB.equals("t")){
                 //0001
                 command = command | 8;
 
@@ -79,9 +80,16 @@ public class EquationLoader extends StringManipulator{
                 numericalB = Double.parseDouble(inputB);
             }
 
-            equation.addOperator(command, 'e', numericalA, numericalB);
-            
-            workString = workString.substring(0, caratPos - inputA.length()) + "t" +  workString.substring(caratPos + inputB.length());
+            if(command == 0){
+                workString = workString.substring(0, caratPos - inputA.length()) + Math.pow(numericalA, numericalB) +  workString.substring(caratPos + inputB.length());
+
+            }
+            else{
+                equation.addOperator(command, 'e', numericalA, numericalB);
+
+                workString = workString.substring(0, caratPos - inputA.length()) + "t" +  workString.substring(caratPos + inputB.length()+1);
+
+            }
 
        }
     }
