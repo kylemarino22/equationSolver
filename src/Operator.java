@@ -3,9 +3,9 @@ public class Operator {
     private double a;
     private double b;
     private char op;
-    private char command;
+    private int command;
 
-    public Operator(char command, char op, double a, double b) {
+    public Operator(int command, char op, double a, double b) {
         this.a = a;
         this.b = b;
         this.op = op;
@@ -37,11 +37,11 @@ public class Operator {
         this.b = b;
     }
 
-    public char getCommand() {
+    public int getCommand() {
         return command;
     }
 
-    public void setCommand(char command) {
+    public void setCommand(int command) {
         this.command = command;
     }
 }
