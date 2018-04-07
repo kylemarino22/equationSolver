@@ -7,8 +7,8 @@ public class EquationObject {
         this.operatorList = operatorList;
     }
 
-    public void addOperator(char command, int a, int b){
-        operatorList.add(new Operator(command, a, b));
+    public void addOperator(char command, char op, double a, double b){
+        operatorList.add(new Operator(command, op, a, b));
     }
 
 

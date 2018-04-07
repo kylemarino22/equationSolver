@@ -24,8 +24,7 @@ public class EquationLoader extends StringManipulator{
 
         for(int i = 1; i < phrase.length() - 1; i++){
 
-            int a;
-            int b;
+            
 
 
 
