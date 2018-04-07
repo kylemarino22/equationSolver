@@ -7,5 +7,13 @@ public class EquationObject {
         this.operatorList.add(new Operator(command, op, a, b));
     }
 
+    public String toString(){
+        String s = "";
+        for (Operator o : operatorList) {
+            s += o.toString() + "\n";
+        }
+        return s;
+    }
+
 
 }

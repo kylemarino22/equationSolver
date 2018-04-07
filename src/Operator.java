@@ -12,6 +12,10 @@ public class Operator {
         this.command = command;
     }
 
+    public String toString(){
+        return "command: " + command + " op: " +op+ " a: " + a + " b: " +b;
+    }
+
     public char getOp() {
         return op;
     }

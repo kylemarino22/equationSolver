@@ -1,7 +1,7 @@
 public abstract class StringManipulator {
 
 
-    final static private char[] validChar = { '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '.'};
+    final static private String validChar = "1234567890.";
 
     public static int findLastChar(char c, String mainString){
 
@@ -41,16 +41,17 @@ public abstract class StringManipulator {
 
         System.out.println(operatorPos);
         for(int i = 1; i < 20; i++){
-            char c = s.charAt(operatorPos - i);
 
-            if(operatorPos - i -1< 0){
-                return s.substring(operatorPos - i, i );
+
+            if(operatorPos - i< 0){
+                return s.substring(operatorPos - i+1, operatorPos);
             }
             else{
-                if(findFirstChar(0, c, s) < 0){
+                char c = s.charAt(operatorPos - i);
+                if(findFirstChar(0, c, validChar) < 0){
                     //not in the valid array
                     if(c == '-'){
-                        return s.substring(operatorPos - i, i);
+                        return s.substring(operatorPos - i+1, operatorPos);
                     }
                     if(c == 't'){
                         return "t";
@@ -59,7 +60,7 @@ public abstract class StringManipulator {
                         return "x";
                     }
 
-                    return s.substring(operatorPos - i, i);
+                    return s.substring(operatorPos - i + 1, operatorPos);
 
                 }
             }
@@ -82,7 +83,7 @@ public abstract class StringManipulator {
             }
             else{
                 char c = s.charAt(operatorPos + i);
-                if(findFirstChar(0, c, s) < 0){
+                if(findFirstChar(0, c, validChar) < 0){
                     //not in the valid array
                     if(c == '-'){
                         return s.substring(operatorPos+1, i + operatorPos);
