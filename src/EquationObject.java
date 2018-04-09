@@ -15,7 +15,7 @@ public class EquationObject {
         return s;
     }
 
-    public double evaluator (int x){
+    public double evaluator (double x){
         double t = 0;
         for (Operator o : operatorList) {
             switch (o.getOp()){

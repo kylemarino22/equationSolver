@@ -15,19 +15,33 @@ public class EquationLoader extends StringManipulator{
         System.out.println(findFirstChar(18, 'l', mainString));
         System.out.println(selectParentheses(mainString));
 
-        String s = "-3*x^2-x+5";
-        System.out.println(addCompile(multCompile(exponentCompile(s))));
-//        System.out.println(leftofOperator(2, s));
+        String s = "(3*(x-5)^2+2)^0.5-3";
+        compileEquation(s);
+//        System.out.println(addCompile(multCompile(exponentCompile(s))));
+////        System.out.println(leftofOperator(2, s));
         System.out.println(equation.toString());
-        System.out.println(equation.evaluator(3));
+        System.out.println(equation.evaluator(-3.123434));
     }
 
 
 
     public static void compileEquation(String equation){
+        double t = 0;
+        while(true) {
+            int openPos = findLastChar('(', equation);
 
-//        create new equation here
+            if(openPos == -1){
+                break;
+            }
+            int closePos = findFirstChar(openPos, ')', equation);
 
+            System.out.println(equation.substring(openPos, closePos + 1));
+            compilePhrase(equation.substring(openPos, closePos + 1));
+
+            equation = equation.substring(0, openPos) + "t" + equation.substring(closePos+ 1);
+        }
+
+        compilePhrase(equation);
     }
 
 
@@ -41,10 +55,7 @@ public class EquationLoader extends StringManipulator{
 
     public static void compilePhrase(String phrase){
 
-        for(int i = 1; i < phrase.length() - 1; i++){
-
-
-        }
+        addCompile(multCompile(exponentCompile(phrase)));
 
     }
 
