@@ -41,6 +41,10 @@ public abstract class StringManipulator {
 
         for(int i = 1; i < 20; i++){
 
+            if(s.charAt(operatorPos - 1) == ']'){
+                return "]";
+            }
+
 
             if(operatorPos - i< 0){
                 return s.substring(operatorPos - i+1, operatorPos);
@@ -82,6 +86,10 @@ public abstract class StringManipulator {
     }
     public static String rightofOperator(int operatorPos, String s){
         for(int i = 1; i < 20; i++){
+
+            if(s.charAt(operatorPos + 1) == '['){
+                return "[";
+            }
 
             if(i == 1 && s.charAt(operatorPos + 1) == '-'){
                 continue;
