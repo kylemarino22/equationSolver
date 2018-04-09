@@ -39,7 +39,6 @@ public abstract class StringManipulator {
 
     public static String leftofOperator(int operatorPos, String s){
 
-        System.out.println(operatorPos);
         for(int i = 1; i < 20; i++){
 
 
@@ -51,12 +50,24 @@ public abstract class StringManipulator {
                 if(findFirstChar(0, c, validChar) < 0){
                     //not in the valid array
                     if(c == '-'){
-                        return s.substring(operatorPos - i+1, operatorPos);
+                        return s.substring(operatorPos - i, operatorPos);
                     }
                     if(c == 't'){
+                        if(operatorPos - i - 1 >= 0){
+                            //check if the (i - 1)th term exists
+                            if(s.charAt(operatorPos - i - 1) == '-'){
+                                return "T";
+                            }
+                        }
                         return "t";
                     }
                     if(c == 'x'){
+                        if(operatorPos - i - 1 >= 0){
+                            //check if the (i - 1)th term exists
+                            if(s.charAt(operatorPos - i - 1) == '-'){
+                                return "X";
+                            }
+                        }
                         return "x";
                     }
 
@@ -85,13 +96,19 @@ public abstract class StringManipulator {
                 char c = s.charAt(operatorPos + i);
                 if(findFirstChar(0, c, validChar) < 0){
                     //not in the valid array
-                    if(c == '-'){
-                        return s.substring(operatorPos+1, i + operatorPos);
-                    }
+//                    if(c == '-'){
+//                        return s.substring(operatorPos, i + operatorPos);
+//                    }
                     if(c == 't'){
+                        if(s.charAt(operatorPos + i - 1) == '-'){
+                            return "T";
+                        }
                         return "t";
                     }
                     if(c == 'x'){
+                        if(s.charAt(operatorPos + i - 1) == '-'){
+                            return "X";
+                        }
                         return "x";
                     }
 

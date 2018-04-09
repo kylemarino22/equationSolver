@@ -1,3 +1,5 @@
+import com.sun.javafx.scene.traversal.SubSceneTraversalEngine;
+
 public class EquationLoader extends StringManipulator{
 
     private static String mainString = "Hello ((( asdfa ((( hell)o world";
@@ -13,9 +15,11 @@ public class EquationLoader extends StringManipulator{
         System.out.println(findFirstChar(18, 'l', mainString));
         System.out.println(selectParentheses(mainString));
 
-        String s = "3/x+69^2.134123-3/x*6/4";
-        System.out.println(multCompile(exponentCompile(s)));
+        String s = "-3*x^2-x+5";
+        System.out.println(addCompile(multCompile(exponentCompile(s))));
+//        System.out.println(leftofOperator(2, s));
         System.out.println(equation.toString());
+        System.out.println(equation.evaluator(3));
     }
 
 
@@ -32,6 +36,8 @@ public class EquationLoader extends StringManipulator{
     // 3 + 0.8333 * t
     // 3 + t
     // t
+
+    // 3*-4
 
     public static void compilePhrase(String phrase){
 
@@ -57,31 +63,62 @@ public class EquationLoader extends StringManipulator{
             if(inputA.equals("x")){
                 //10
                 command = command | 1;
+
             }
             else if(inputA.equals("t")){
                 command = command | 2;
                 //01
 
             }
-            else{
-                numericalA = Double.parseDouble(inputA);
-            }
-            String inputB = rightofOperator(caratPos, workString);
-            if(inputB.equals("x")){
-                //0010
+            else if(inputA.equals("X")){
+                workString = workString.substring(caratPos - 1);
+                caratPos --;
+                command = command | 1;
                 command = command | 4;
+            }
+            else if(inputA.equals("T")){
+
+                workString = workString.substring(caratPos - 1);
+                caratPos --;
+                System.out.println(workString);
+                command = command | 2;
+                command = command | 4;
+            }
+            else{
+                System.out.println(inputA);
+                System.out.println("here");
+                numericalA = Double.parseDouble(inputA);
+                System.out.println(numericalA);
+
+            }
+
+
+            String inputB = rightofOperator(caratPos, workString);
+            System.out.println(inputB);
+            if(inputB.equals("x")){
+                //001
+                command = command | 8;
             }
             else if(inputB.equals("t")){
                 //0001
-                command = command | 8;
+                command = command | 16;
 
+            }
+            else if(inputB.equals("X")){
+
+                command = command | 8;
+                command = command | 32;
+            }
+            else if(inputB.equals("T")){
+                command = command | 16;
+                command = command | 32;
             }
             else{
                 numericalB = Double.parseDouble(inputB);
             }
 
             if(command == 0){
-                workString = workString.substring(0, caratPos - inputA.length()) + Math.pow(numericalA, numericalB) +  workString.substring(caratPos + inputB.length());
+                workString = workString.substring(0, caratPos - inputA.length()) + Math.pow(numericalA, numericalB) +  workString.substring(caratPos + inputB.length()+1);
 
             }
             else{
@@ -132,24 +169,52 @@ public class EquationLoader extends StringManipulator{
             if(inputA.equals("x")){
                 //10
                 command = command | 1;
+
             }
             else if(inputA.equals("t")){
                 command = command | 2;
                 //01
 
             }
+            else if(inputA.equals("X")){
+                workString = workString.substring(operatorPos - 1);
+                operatorPos --;
+                command = command | 1;
+                command = command | 4;
+            }
+            else if(inputA.equals("T")){
+
+                workString = workString.substring(operatorPos - 1);
+                operatorPos --;
+                System.out.println(workString);
+                command = command | 2;
+                command = command | 4;
+            }
             else{
+                System.out.println(inputA);
+                System.out.println("here");
                 numericalA = Double.parseDouble(inputA);
+                System.out.println(numericalA);
+
             }
             String inputB = rightofOperator(operatorPos, workString);
             if(inputB.equals("x")){
-                //0010
-                command = command | 4;
+                //001
+                command = command | 8;
             }
             else if(inputB.equals("t")){
                 //0001
-                command = command | 8;
+                command = command | 16;
 
+            }
+            else if(inputB.equals("X")){
+
+                command = command | 8;
+                command = command | 32;
+            }
+            else if(inputB.equals("T")){
+                command = command | 16;
+                command = command | 32;
             }
             else{
                 numericalB = Double.parseDouble(inputB);
@@ -175,6 +240,7 @@ public class EquationLoader extends StringManipulator{
                     workString = workString.substring(0, operatorPos - inputA.length()) + "t" +  workString.substring(operatorPos + inputB.length() + 1);
                 }
             }
+
         }
     }
 
@@ -182,13 +248,13 @@ public class EquationLoader extends StringManipulator{
         String workString = phrase;
 
         while(true) {
-            int addPos = findFirstChar(0, '+', workString);
-            int subPos = findFirstChar(0, '-', workString);
+            int addPos = findFirstChar(1, '+', workString);
+            int subPos = findFirstChar(1, '-', workString);
             int operatorPos;
             char op;
 
             if(subPos == -1 && addPos == -1){
-                //end if there are not mult/div operators
+                //end if there are no add/sub operators
                 return workString;
             }
 
@@ -213,72 +279,81 @@ public class EquationLoader extends StringManipulator{
             double numericalB = 0;
 
             String inputA = leftofOperator(operatorPos, workString);
-            int negative = 0;
-            if(workString.charAt(operatorPos - inputA.length() - 1) == '-'){
-                negative = 1;
-            }
 
             if(inputA.equals("x")){
                 //10
                 command = command | 1;
 
-                if(negative == 1){
-                    //010
-                    command = command | 2
-                }
-            }
-            else if(charAt(operatorPos - inputA.length() - 1) == '-'){
-
             }
             else if(inputA.equals("t")){
-                command = command | 4;
-                //001
+                command = command | 2;
+                //01
 
             }
+            else if(inputA.equals("X")){
+                command = command | 1;
+                command = command | 4;
+            }
+            else if(inputA.equals("T")){
+
+                workString = workString.substring(operatorPos - 2);
+                operatorPos --;
+                System.out.println(workString);
+                command = command | 2;
+                command = command | 4;
+            }
             else{
+                System.out.println(inputA);
+                System.out.println("here");
                 numericalA = Double.parseDouble(inputA);
+                System.out.println(numericalA);
+
             }
             String inputB = rightofOperator(operatorPos, workString);
             if(inputB.equals("x")){
-                //0001
+                //001
                 command = command | 8;
-
-                if(negative == 1){
-                    //00001
-                    command = command | 16;
-                }
             }
             else if(inputB.equals("t")){
-                //000001
-                command = command | 32;
+                //0001
+                command = command | 16;
 
+            }
+            else if(inputB.equals("X")){
+
+                command = command | 8;
+                command = command | 32;
+            }
+            else if(inputB.equals("T")){
+                command = command | 16;
+                command = command | 32;
             }
             else{
                 numericalB = Double.parseDouble(inputB);
-                if(negative == 1){
+                System.out.println(numericalB);
+                if(op == 's'){
                     numericalB *= -1;
                 }
             }
 
             if(command == 0){
-                if(op == 'a'){
-                    workString = workString.substring(0, operatorPos - inputA.length()) + (numericalA + numericalB) +  workString.substring(operatorPos + inputB.length());
-                }
-                else{
-                    workString = workString.substring(0, operatorPos - inputA.length()) + (numericalA - numericalB) +  workString.substring(operatorPos + inputB.length());
-                }
+                    workString = workString.substring(0, operatorPos - inputA.length()) + (numericalA + numericalB) +  workString.substring(operatorPos + inputB.length()+1);
+
+//                else{
+//                    workString = workString.substring(0, operatorPos - inputA.length()) + (numericalA - numericalB) +  workString.substring(operatorPos + inputB.length());
+//                }
 
             }
             else{
 
-                if(op == 'a'){
+//                if(op == 'a'){
                     equation.addOperator(command, 'a', numericalA, numericalB);
-                    workString = workString.substring(0, operatorPos - inputA.length()) + "t" +  workString.substring(operatorPos + inputB.length() +1);
-                }
-                else{
-                    equation.addOperator(command, 's', numericalA, numericalB);
-                    workString = workString.substring(0, operatorPos - inputA.length()) + "t" +  workString.substring(operatorPos + inputB.length() + 1);
-                }
+                    workString = workString.substring(0, operatorPos - inputA.length()) + "t" +  workString.substring(operatorPos + inputB.length()+1);
+//                }
+//                else{
+//                    equation.addOperator(command, 's', numericalA, numericalB);
+//                    workString = workString.substring(0, operatorPos - inputA.length()) + "t" +  workString.substring(operatorPos + inputB.length() + 1);
+//                }
             }
         }
     }

@@ -13,7 +13,7 @@ public class Operator {
     }
 
     public String toString(){
-        return "command: " + command + " op: " +op+ " a: " + a + " b: " +b;
+        return "command: " + Integer.toString(command,2) + " op: " +op+ " a: " + a + " b: " +b;
     }
 
     public char getOp() {
