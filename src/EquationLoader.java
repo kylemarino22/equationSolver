@@ -98,12 +98,16 @@ public class EquationLoader extends StringManipulator{
 
          */
 //        compileEquation(s);
-        String asd = "(3-x^2)";
-        preliminaryCompiler(as);
+        String asd = "((2*x)*(4*x^2-23)+(4*x))^2*(x-3)";
+        String p = "[t2]+[t1]-3";
+        preliminaryCompiler(asd);
         subCompiler();
+        System.out.println("\n");
+        System.out.println(equation.toString());
+        System.out.println(equation.evaluator(1));
 //        System.out.println(addCompile(multCompile(exponentCompile(s))));
 ////        System.out.println(leftofOperator(2, s));
-        System.out.println(equation.toString());
+
 //        System.out.println(equation.evaluator(1.3));
     }
 
@@ -175,6 +179,7 @@ public class EquationLoader extends StringManipulator{
         String workString = phrase;
         boolean firstNegative = false;
         String replaceString = "t";
+        int destination = 0;
         while(true){
             int caratPos = findFirstChar(0,'^', workString);
             int command = 0;
@@ -214,9 +219,16 @@ public class EquationLoader extends StringManipulator{
             else if(inputA.equals("]")){
                 if(replace){
                     replaceString = "[t" + workString.charAt(caratPos - 2) + "]";
+                    destination = workString.charAt(caratPos - 2) - '0';
                 }
 
-                command = command | (workString.charAt(caratPos - 2) - '0' +1);
+                int mask = (workString.charAt(caratPos - 2) - '0' +1);
+
+                if(caratPos > 5 && workString.charAt(caratPos - 5) == '-'){
+                    mask = mask | 16;
+                }
+                command = command | mask;
+
                 workString = workString.substring(0, caratPos - 4) + "t" + workString.substring(caratPos);
                 caratPos -= 3;
             }
@@ -247,14 +259,23 @@ public class EquationLoader extends StringManipulator{
                 command = command | 4352;
             }
             else if(inputB.equals("T")){
-                command = command | 3840;
-                command = command | 4352;
+                command = command | 3840; //0000 0000 1111 0000
+                command = command | 4352; //0000 0000 0000 1000
             }
             else if(inputB.equals("[")){
                 if(replace && replaceString.equals("t")){
                     replaceString = "[t" + workString.charAt(caratPos + 3) + "]";
+                    destination = workString.charAt(caratPos+3) - '0';
                 }
+
                 int mask = workString.charAt(caratPos+3) - '0'+1;
+
+                if(workString.charAt(caratPos + 1) == '-'){
+                    mask = workString.charAt(caratPos+4) - '0'+1;
+                    mask = mask | 16;
+                    destination = workString.charAt(caratPos+4) - '0';
+                }
+
                 command = command | (mask << 8);
                 workString = workString.substring(0, caratPos) + "t" + workString.substring(caratPos + 4);
             }
@@ -269,7 +290,7 @@ public class EquationLoader extends StringManipulator{
 
             }
             else{
-                equation.addOperator(index, command, 'e', numericalA, numericalB);
+                equation.addOperator(index, command, 'e', numericalA, numericalB, destination);
 
                 if(!(inputA.equals("X") || inputA.equals("T")) && (caratPos - inputA.length() == 0 || numericalA >= 0 )){
                     workString = workString.substring(0, caratPos - inputA.length()) + replaceString + workString.substring(caratPos + inputB.length() + 1);
@@ -290,6 +311,7 @@ public class EquationLoader extends StringManipulator{
         String workString = phrase;
         boolean firstNegative = false;
         String replaceString = "t";
+        int destination = 0;
         while(true) {
             int multPos = findFirstChar(0, '*', workString);
             int divPos = findFirstChar(0, '/', workString);
@@ -352,8 +374,16 @@ public class EquationLoader extends StringManipulator{
             else if(inputA.equals("]")){
                 if(replace){
                     replaceString = "[t" + workString.charAt(operatorPos - 2) + "]";
+                    destination = workString.charAt(operatorPos - 2) - '0';
                 }
-                command = command | (workString.charAt(operatorPos - 2) - '0' +1);
+
+                int mask = (workString.charAt(operatorPos - 2) - '0' +1);
+
+                if(operatorPos > 5 && workString.charAt(operatorPos - 5) == '-'){
+                    mask = mask | 16;
+                }
+                command = command | mask;
+
                 workString = workString.substring(0, operatorPos - 4) + "t" + workString.substring(operatorPos);
                 operatorPos -= 3;
             }
@@ -390,8 +420,15 @@ public class EquationLoader extends StringManipulator{
             else if(inputB.equals("[")){
                 if(replace && replaceString.equals("t")){
                     replaceString = "[t" + workString.charAt(operatorPos + 3) + "]";
+                    destination = workString.charAt(operatorPos+3) - '0';
                 }
                 int mask = workString.charAt(operatorPos+3) - '0'+1;
+
+                if(workString.charAt(operatorPos + 1) == '-'){
+                    mask = workString.charAt(operatorPos+4) - '0'+1;
+                    mask = mask | 16;
+                    destination = workString.charAt(operatorPos+4) - '0';
+                }
                 command = command | (mask << 8);
                 workString = workString.substring(0, operatorPos) + "t" + workString.substring(operatorPos + 4);
             }
@@ -421,13 +458,13 @@ public class EquationLoader extends StringManipulator{
                 }
 
                 if(op == 'm'){
-                    equation.addOperator(index, command, 'm', numericalA, numericalB);
+                    equation.addOperator(index, command, 'm', numericalA, numericalB, destination);
 
 
 
                 }
                 else{
-                    equation.addOperator(index, command, 'd', numericalA, numericalB);
+                    equation.addOperator(index, command, 'd', numericalA, numericalB, destination);
                 }
             }
             System.out.println(workString);
@@ -439,6 +476,7 @@ public class EquationLoader extends StringManipulator{
     private static String addCompile(String phrase, int index, boolean replace){
         String workString = phrase;
         String replaceString = "t";
+        int destination = 0;
         while(true) {
             int addPos = findFirstChar(1, '+', workString);
             int subPos = findFirstChar(1, '-', workString);
@@ -500,8 +538,14 @@ public class EquationLoader extends StringManipulator{
             else if(inputA.equals("]")){
                 if(replace){
                     replaceString = "[t" + workString.charAt(operatorPos - 2) + "]";
+                    destination = workString.charAt(operatorPos - 2) - '0';
                 }
-                command = command | (workString.charAt(operatorPos - 2) - '0' +1);
+                int mask = (workString.charAt(operatorPos - 2) - '0' +1);
+
+                if(operatorPos > 5 && workString.charAt(operatorPos - 5) == '-'){
+                    mask = mask | 16;
+                }
+                command = command | mask;
                 workString = workString.substring(0, operatorPos - 4) + "t" + workString.substring(operatorPos);
                 operatorPos -= 3;
             }
@@ -524,7 +568,7 @@ public class EquationLoader extends StringManipulator{
             }
             else if(inputB.equals("X")){
 
-                workString = workString.substring(0, operatorPos)+ workString.substring(operatorPos + 1);
+                workString = workString.substring(0, operatorPos)+ "+" +  workString.substring(operatorPos + 1);
 
 
                 command = command | 256;
@@ -537,8 +581,14 @@ public class EquationLoader extends StringManipulator{
             else if(inputB.equals("[")){
                 if(replace && replaceString.equals("t")){
                     replaceString = "[t" + workString.charAt(operatorPos + 3) + "]";
+                    destination = workString.charAt(operatorPos+3) - '0';
                 }
                 int mask = workString.charAt(operatorPos+3) - '0'+1;
+
+                if(workString.charAt(operatorPos + 1) == '-' || op == 's'){
+                    mask = mask | 16;
+                }
+
                 command = command | (mask << 8);
                 workString = workString.substring(0, operatorPos) + "t" + workString.substring(operatorPos + 4);
             }
@@ -562,7 +612,7 @@ public class EquationLoader extends StringManipulator{
             else{
 
 //                if(op == 'a'){
-                    equation.addOperator(index, command, 'a', numericalA, numericalB);
+                    equation.addOperator(index, command, 'a', numericalA, numericalB, destination);
                     workString = workString.substring(0, operatorPos - inputA.length()) + replaceString +  workString.substring(operatorPos + inputB.length()+1);
 //                }
 //                else{

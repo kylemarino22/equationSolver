@@ -92,6 +92,9 @@ public abstract class StringManipulator {
             }
 
             if(i == 1 && s.charAt(operatorPos + 1) == '-'){
+                if(s.charAt(operatorPos + 2) == '['){
+                    return "[";
+                }
                 continue;
             }
 

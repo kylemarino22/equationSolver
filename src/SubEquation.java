@@ -1,3 +1,4 @@
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class SubEquation {
@@ -10,12 +11,16 @@ public class SubEquation {
         this.equation = equation;
     }
 
-    public void addOperator(int command, char op, double a, double b){
-        this.operatorList.add(new Operator(command, op, a, b));
+    public void addOperator(int command, char op, double a, double b, int destination){
+        this.operatorList.add(new Operator(command, op, a, b, destination));
     }
 
-    public Operator getOperatorList(int index) {
+    public Operator getOperator(int index) {
         return operatorList.get(index);
+    }
+
+    public ArrayList<Operator> getOperatorList() {
+        return operatorList;
     }
 
     public String getEquation() {
