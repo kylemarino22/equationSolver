@@ -6,6 +6,10 @@ public class EquationObject {
     private ArrayList<ComplexDouble> iList = new ArrayList<>(); //imaginary numbers
     private SubEquation finalEquation;
 
+
+    public EquationObject(){
+        varList.add(new ComplexDouble(0,0));
+    }
     public String getFinalEquation() {
         return finalEquation.getEquation();
     }
@@ -63,111 +67,101 @@ public class EquationObject {
         return s;
     }
 
-//    public double evaluator (double x){
-//        double t = 0;
-//
-//        for(int i = 0; i < equationList.size(); i++){
-//            t = 0;
-//            for(Operator op : equationList.get(i).getOperatorList()) {
-//                switch (op.getOp()) {
-//                    case 'e':
-//                        t = evalE(op, x, t);
-//                        break;
-//                    case 'm':
-//                        t = evalM(op, x, t);
-//                        break;
-//                    case 'a':
-//                        t = evalA(op, x, t);
-//                        break;
-//                }
-//            }
-//
-////            varList.add(t);
-//        }
-//
-//        for(Operator op : finalEquation.getOperatorList()) {
-//            switch (op.getOp()) {
-//                case 'e':
-//                    t = evalE(op, x, t);
-//                    break;
-//                case 'm':
-//                    t = evalM(op, x, t);
-//                    break;
-//                case 'a':
-//                    t = evalA(op, x, t);
-//                    break;
-//            }
-//        }
-//        return t;
-//    }
+    public ComplexDouble evaluator (ComplexDouble x){
 
-//    private double evalE(Operator op, double x, double t){
-//        double base = op.getA();
-//        double exp = op.getB();
-//
-//        //base
-//
-//        //0000 0000 0000 0000
-//        //0000 0000 1100 1000 | 0000 1111 1111 1111 == 65521 --> Default
-//        //1111 0000 0000 0000 | 0000 1111 1111 1111 == 1111 1111 1111 1111
-//        //0b0110_1001_1100_0010
-//
-//
-//        /*
-//        100         001
-//        010         010
-//        110         011
-//        001         100
-//        101         101
-//
-//         */
-//
-//        if((op.getCommand() | 65520) == 65520){
-//            //default number
-//            base = op.getA();
-//        }
-//        else if((op.getCommand() | 65521) == 65521){
-//            base = x;
-//        }
-//        else if((op.getCommand() | 65521) == 65535){
-//            base = t;
-//        }
-//        else{
-//            int loc = op.getCommand() & 15; // 0100 0000 1111 0000 & 1111 0000 0000 0000 = 0100 0000 0000 0000
-//            base = memoryList.get(loc-2);
-//        }
-//        if((op.getCommand() & 16) == 16){
-//            base *= -1;
-//        }
-//
-//
-//        //1111 0000 0000 0000 | 1111 1111 0000 1111 == 1111 1111 0000 1111 (61695)
-//        //1010 0000
-//
-//        //exponent
-//        if((op.getCommand() | 61695) == 61695){
-//            exp = op.getB();
-//        }
-//        else if((op.getCommand() | 61951) == 61951 ){
-//            exp = x;
-//        }
-//        else if((op.getCommand() | 61951) == 65535){
-//            exp = t;
-//        }
-//        else{
-//            int loc = (op.getCommand() & 3840) >> 8; // 1111 0000 0100 0000 & 0000 0000 1111 0000 = 0000 0000 0100 0000
-//            exp = memoryList.get(loc-2);
-//        }
-//
-//        if((op.getCommand() & 4096) == 4096){
-//            exp *= -1;
-//        }
-//
-//        if(op.getDestination() != 0){
-//            memoryList.set(op.getDestination() -1, Math.pow(base, exp));
-//        }
-//        return Math.pow(base, exp);
-//    }
+        for(int i = 0; i < equationList.size(); i++){
+            for(Operator op : equationList.get(i).getOperatorList()) {
+                evalInstruction(op, x);
+            }
+        }
+
+        for(Operator op : finalEquation.getOperatorList()) {
+            evalInstruction(op, x);
+        }
+        return varList.get(0);
+    }
+
+    private void evalInstruction(Operator op, ComplexDouble x){
+        //base
+        ComplexDouble base = new ComplexDouble(0,0);
+        ComplexDouble exp = new ComplexDouble(0,0);
+
+        //0000 0000 0000 0000
+        //0000 0000 1100 1000 | 0000 1111 1111 1111 == 65521 --> Default
+        //1111 0000 0000 0000 | 0000 1111 1111 1111 == 1111 1111 1111 1111
+        //0b0110_1001_1100_0010
+
+
+        /*
+        100         001
+        010         010
+        110         011
+        001         100
+        101         101
+
+         */
+
+        //& clear execpt for specified bits
+
+        if((op.getCommand() & 0b0000_0000_1100_0000) == 0b0000_0000_0100_0000){
+            //default number
+            base = x;
+        }
+        else if((op.getCommand() & 0b0000_0000_1100_0000) == 0b0000_0000_0000_0000){
+            int index = op.getCommand() & 0b0000_0000_0011_1111;
+            base = iList.get(index);
+        }
+        else if((op.getCommand() & 0b0000_0000_1100_0000) == 0b0000_0000_1000_0000){
+            int index = op.getCommand() & 0b0000_0000_0011_1111;
+            base = varList.get(index);
+        }
+
+        //exponent
+        if((op.getCommand() & 0b1100_0000_0000_0000) == 0b0100_0000_0000_0000){
+            //default number
+            exp = x;
+        }
+        else if((op.getCommand() & 0b1100_0000_0000_0000) == 0b0000_0000_0000_0000){
+            int index = (op.getCommand() & 0b0011_1111_0000_0000) >> 8;
+            exp = iList.get(index);
+        }
+        else if((op.getCommand() & 0b1100_0000_0000_0000) == 0b1000_0000_0000_0000){
+            int index = (op.getCommand() & 0b0011_1111_0000_0000) >> 8;
+            exp = varList.get(index);
+        }
+
+        //calculate value
+        ComplexDouble val = new ComplexDouble(0,0);
+        switch (op.getOp()) {
+            case 'e':
+                val = ComplexDouble.pwr(base,exp);
+                break;
+            case 'm':
+                val = ComplexDouble.mult(base,exp);
+                break;
+            case 'd':
+                val = ComplexDouble.div(base,exp);
+                break;
+            case 'a':
+                val = ComplexDouble.add(base,exp);
+                break;
+            case 's':
+                val = ComplexDouble.sub(base,exp);
+                break;
+        }
+
+        if(op.getDestination() == 0){
+            varList.set(0,val);
+        }
+        else{
+            varList.add(val);
+        }
+
+    }
+
+
+
+
 //
 //    private double evalM(Operator op, double x, double t){
 //        double a, b;

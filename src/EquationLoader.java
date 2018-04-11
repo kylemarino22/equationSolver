@@ -121,7 +121,7 @@ public class EquationLoader extends StringManipulator{
 
 
         0 = i, 1 = x, 10 = t
-                  |
+                   |
         0000 0000 0000 0000
         SubEquation Compilation:
         command: 0100 0000 0000 0010 op: e dest: 1000 0000   | [i2]^x --> t
@@ -148,7 +148,7 @@ public class EquationLoader extends StringManipulator{
 
 
 
-        preliminaryCompiler(imaginaryParser(p));
+        preliminaryCompiler(imaginaryParser(asad));
         subCompiler();
 //        System.out.println("\n");
         System.out.println(equation.toString());
@@ -156,7 +156,9 @@ public class EquationLoader extends StringManipulator{
 //        System.out.println(addCompile(multCompile(exponentCompile(s))));
 ////        System.out.println(leftofOperator(2, s));
 
-//        System.out.println(equation.evaluator(1.3));
+        System.out.println(equation.evaluator(new ComplexDouble(0.2, -3.2)));
+
+
     }
 
     public static void preliminaryCompiler(String equationString){
