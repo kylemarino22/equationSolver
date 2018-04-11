@@ -96,10 +96,55 @@ public class EquationLoader extends StringManipulator{
         evaluate
 
 
+
+        Imaginary Workspace
+
+        4*(((1+2i)*(3+5i))^(-3i)+(6-3i))^(3.23*x-3i)-13.23+0.434i
+        <4,0>*((<1,2>*<3,5>^x)^<0,-3>+<6,3>)^(<3.23,0>*x+<0,-3>)+<-13.23,0.434>
+        i0 = <4,0>
+        i1 = <1,2>
+        i2 = <3,5>
+        i3 = <0,-3>
+        i4 = <6,3>
+        i5 = <3.23,0>
+        i6 = <0,-3>
+        i7 = <-13.23,0.434>
+
+        [i0]*(([i1]*[i2]^x)^[i3]+[i4])^([i5]*x+[i6])+[i7]
+
+        t1 = [i1]*[i2]^x
+            -->[i0]*([t1]^[i3]+[i4])^([i5]*x+[i6])
+        t2 = [t1]^[i3]+[i4]
+            -->[i0]*[t2]^([i5]*x+[i6])
+        t3 = [i5]*x+[i6]
+            -->[i0]*[t2]^[t3]+[i7]
+
+
+        0 = i, 1 = x, 10 = t
+                  |
+        0000 0000 0000 0000
+        SubEquation Compilation:
+        command: 0100 0000 0000 0010 op: e dest: 1000 0000   | [i2]^x --> t
+        command: 1000 0000 0000 0001 op: * dest: 1000 0001   | [i1]*t --> t1
+
+        command: 0000 0011 1000 0001 op: e dest: 1000 0000   | [t1]^[i3] --> t
+        command: 0000 0100 1000 0000 op: a dest: 1000 0010   | t+[i4] --> t2
+
+        command: 0100 0000 0000 0101 op: e dest: 1000 0000   | [i5]*x --> t
+        command: 0000 0110 1000 0000 op: a dest: 1000 0011   | t+[i6] --> t3
+
+        Equation Compilation
+        command: 1000 0010 1000 0011 op: e dest: 1000 0000   | [t2]^[t3] --> t
+        command: 1000 0000 0000 0000 op: m dest: 1000 0000   | [i0]*t --> t
+        command: 0000 0111 1000 0000 op: m dest: 1000 0000   | t+[i7] --> t
+
+
          */
 //        compileEquation(s);
         String asd = "((2*x)*(4*x^2-23)+(4*x))^2*(x-3)";
         String p = "[t2]+[t1]-3";
+
+        String asad = "<1,2>*<3,5";
         preliminaryCompiler(asd);
         subCompiler();
         System.out.println("\n");
@@ -139,6 +184,35 @@ public class EquationLoader extends StringManipulator{
         addCompile(s, -1, true);
     }
 
+    public static String imaginaryParser(String input){
+        //4*(((1+2i)*(3+5i))^(-3i)+(6-3i))^(3.23*x-3i)-13.23+0.434i
+        //<4,0>*((<1,2>*<3,5>^x)^<0,-3>+<6,3>)^(<3.23,0>*x+<0,-3>)+<-13.23,0.434>
+
+        /*
+
+        Repeat:
+            Find the inner most set of parentheses
+            if the only operator is + or -
+                Convert into imaginary format
+                Replace with imaginary format
+
+        Repeat:
+            if inside <> continue
+            Search for first number
+                Get sign of number
+                Check if number has an i after it
+                Convert to imaginary format
+                Replace with imaginary format
+                Reset Repeat
+            
+
+
+
+         */
+
+
+
+    }
 
 //    public static void compileEquation(String equation){
 //        double t = 0;
