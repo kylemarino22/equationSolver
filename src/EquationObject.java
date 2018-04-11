@@ -25,7 +25,7 @@ public class EquationObject {
     public void printiList(){
 
         for(int i = 0; i < iList.size(); i++){
-            System.out.println("[i" + i + "]  " + iList.get(i).toString());
+            System.out.println("[i" + i + "]\t" + iList.get(i).toString());
         }
     }
 

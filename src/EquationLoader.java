@@ -147,11 +147,11 @@ public class EquationLoader extends StringManipulator{
         String asad = "4*(((1+2i)*(3+5i-3))^(-3i)+(6-3i))^(3.23*x-3i)-13.23+0.434i";
 
 
-        imaginaryParser(asad);
-//        preliminaryCompiler(asd);
+        
+        preliminaryCompiler(imaginaryParser(asad));
 //        subCompiler();
 //        System.out.println("\n");
-//        System.out.println(equation.toString());
+        System.out.println(equation.toString());
 //        System.out.println(equation.evaluator(1));
 //        System.out.println(addCompile(multCompile(exponentCompile(s))));
 ////        System.out.println(leftofOperator(2, s));
@@ -161,11 +161,11 @@ public class EquationLoader extends StringManipulator{
 
     public static void preliminaryCompiler(String equationString){
         while(true){
-            int pos = findLastChar('(', equationString);
+            int pos = findLastChar('{', equationString);
             if(pos == -1){
                 break;
             }
-            int endPos = findFirstChar(pos, ')', equationString);
+            int endPos = findFirstChar(pos, '}', equationString);
 
             equation.addSubEquation(equationString.substring(pos+1, endPos));
             equationString = equationString.substring(0, pos) +"[t" + equation.getSubEquationID() + "]"+equationString.substring(endPos+1);
@@ -392,7 +392,7 @@ public class EquationLoader extends StringManipulator{
         }
 
         equation.printiList();
-        return "0";
+        return input;
 
 
     }
