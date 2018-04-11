@@ -56,15 +56,7 @@ public abstract class StringManipulator {
                     if(c == '-'){
                         return s.substring(operatorPos - i, operatorPos);
                     }
-                    if(c == 't'){
-                        if(operatorPos - i - 1 >= 0){
-                            //check if the (i - 1)th term exists
-                            if(s.charAt(operatorPos - i - 1) == '-'){
-                                return "T";
-                            }
-                        }
-                        return "t";
-                    }
+
                     if(c == 'x'){
                         if(operatorPos - i - 1 >= 0){
                             //check if the (i - 1)th term exists
@@ -110,12 +102,7 @@ public abstract class StringManipulator {
 //                    if(c == '-'){
 //                        return s.substring(operatorPos, i + operatorPos);
 //                    }
-                    if(c == 't'){
-                        if(s.charAt(operatorPos + i - 1) == '-'){
-                            return "T";
-                        }
-                        return "t";
-                    }
+//
                     if(c == 'x'){
                         if(s.charAt(operatorPos + i - 1) == '-'){
                             return "X";

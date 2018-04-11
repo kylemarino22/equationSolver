@@ -142,14 +142,14 @@ public class EquationLoader extends StringManipulator{
          */
 //        compileEquation(s);
         String asd = "((2*x)*(4*x^2-23)+(4*x))^2*(x-3)";
-        String p = "[t2]+[t1]-3";
+        String p = "((1+2i)^(3+5i))+(3*x)";
 
         String asad = "4*(((1+2i)*(3+5i-3))^(-3i)+(6-3i))^(3.23*x-3i)-13.23+0.434i";
 
 
-        
-        preliminaryCompiler(imaginaryParser(asad));
-//        subCompiler();
+
+        preliminaryCompiler(imaginaryParser(p));
+        subCompiler();
 //        System.out.println("\n");
         System.out.println(equation.toString());
 //        System.out.println(equation.evaluator(1));
@@ -175,16 +175,17 @@ public class EquationLoader extends StringManipulator{
 
     public static void subCompiler(){
         String s = "";
+
         for (int i = 0; i < equation.getSubEquationID(); i++){
 
             s = exponentCompile(equation.getSubEquation(i), i, false);
             s = multCompile(s, i, false);
-            addCompile(s, i, false);
+            addCompile(s, i, i+1);
         }
 
-        s = exponentCompile(equation.getFinalEquation(), -1, true);
-        s = multCompile(s, -1, true);
-        addCompile(s, -1, true);
+        s = exponentCompile(equation.getFinalEquation(), -1, false);
+        s = multCompile(s, -1, false);
+        addCompile(s, -1, 0);
     }
 
     public static String imaginaryParser(String input){
@@ -397,46 +398,14 @@ public class EquationLoader extends StringManipulator{
 
     }
 
-//    public static void compileEquation(String equation){
-//        double t = 0;
-//        while(true) {
-//            int openPos = findLastChar('(', equation);
-//
-//            if(openPos == -1){
-//                break;
-//            }
-//            int closePos = findFirstChar(openPos, ')', equation);
-//
-//            System.out.println(equation.substring(openPos, closePos + 1));
-//            compilePhrase(equation.substring(openPos, closePos + 1));
-//
-//            equation = equation.substring(0, openPos) + "t" + equation.substring(closePos+ 1);
-//        }
-//
-//        compilePhrase(equation);
-//    }
-
-
-    // 3 + 5 / 6 * 3^x
-    // 3 + 5 / 6 * t
-    // 3 + 0.8333 * t
-    // 3 + t
-    // t
-
-    // 3*-4
-
-//    public static void compilePhrase(String phrase){
-//
-//        addCompile(multCompile(exponentCompile(phrase)));
-//
-//    }
-
     private static String exponentCompile(String phrase, int index, boolean replace){
 
         String workString = phrase;
         boolean firstNegative = false;
         String replaceString = "t";
         int destination = 0;
+        int leftLength = 0;
+        int rightLength = 0;
         while(true){
             int caratPos = findFirstChar(0,'^', workString);
             int command = 0;
@@ -447,128 +416,77 @@ public class EquationLoader extends StringManipulator{
             }
             String inputA = leftofOperator(caratPos, workString);
             if(inputA.equals("x")){
-                //10
-                command = command | 1;
 
-            }
-            else if(inputA.equals("t")){
-                command = command | 15;
-                //01
+                // 0100 0000
+                command |= 0b0100_0000;
+                leftLength = 1;
 
-            }
-            else if(inputA.equals("X")){
-//                if(caratPos - 1 == 0){
-                    firstNegative = true;
-//                }
-                workString = workString.substring(0, caratPos - 2)+ workString.substring(caratPos - 1);
-                caratPos --;
-                command = command | 1;
-                command = command | 16;
-            }
-            else if(inputA.equals("T")){
-
-                workString = workString.substring(0, caratPos - 2) + workString.substring(caratPos - 1);
-                caratPos --;
-                System.out.println(workString);
-                command = command | 15;
-                command = command | 16;
             }
             else if(inputA.equals("]")){
-                if(replace){
-                    replaceString = "[t" + workString.charAt(caratPos - 2) + "]";
-                    destination = workString.charAt(caratPos - 2) - '0';
+
+
+
+                String value = leftofOperator(caratPos-1, workString);
+                leftLength = value.length() + 3;
+
+                if(workString.charAt(caratPos - 2 - value.length()) == 't'){
+                    //| 1000
+                    command |= 0b1000_0000;
                 }
-
-                int mask = (workString.charAt(caratPos - 2) - '0' +1);
-
-                if(caratPos > 5 && workString.charAt(caratPos - 5) == '-'){
-                    mask = mask | 16;
+                else{
+                    // 0000
                 }
-                command = command | mask;
+                int val = Integer.parseInt(value);
 
-                workString = workString.substring(0, caratPos - 4) + "t" + workString.substring(caratPos);
-                caratPos -= 3;
-            }
-            else{
-                numericalA = Double.parseDouble(inputA);
-
+                //| value into first bits
+                command |= val;
 
             }
 
             String inputB = rightofOperator(caratPos, workString);
-
             if(inputB.equals("x")){
-                //001
-                command = command | 256;
-            }
-            else if(inputB.equals("t")){
-                //0001
-                command = command | 3840;
 
-            }
-            else if(inputB.equals("X")){
+                // 0100 0000
+                command |= 0b0100_0000_0000_0000;
+                rightLength = 1;
 
-                firstNegative = !firstNegative;
-                workString = workString.substring(0, caratPos)+ workString.substring(caratPos + 1);
-
-
-                command = command | 256;
-                command = command | 4352;
-            }
-            else if(inputB.equals("T")){
-                command = command | 3840; //0000 0000 1111 0000
-                command = command | 4352; //0000 0000 0000 1000
             }
             else if(inputB.equals("[")){
-                if(replace && replaceString.equals("t")){
-                    replaceString = "[t" + workString.charAt(caratPos + 3) + "]";
-                    destination = workString.charAt(caratPos+3) - '0';
-                }
 
-                int mask = workString.charAt(caratPos+3) - '0'+1;
+                String value = rightofOperator(caratPos + 2, workString);
+                rightLength = value.length() + 3;
 
-                if(workString.charAt(caratPos + 1) == '-'){
-                    mask = workString.charAt(caratPos+4) - '0'+1;
-                    mask = mask | 16;
-                    destination = workString.charAt(caratPos+4) - '0';
-                }
-
-                command = command | (mask << 8);
-                workString = workString.substring(0, caratPos) + "t" + workString.substring(caratPos + 4);
-            }
-            else{
-                System.out.println(workString);
-                numericalB = Double.parseDouble(inputB);
-
-            }
-
-            if(command == 0){
-                workString = workString.substring(0, caratPos - inputA.length()) + Math.pow(numericalA, numericalB) +  workString.substring(caratPos + inputB.length()+1);
-
-            }
-            else{
-                equation.addOperator(index, command, 'e', numericalA, numericalB, destination);
-
-                if(!(inputA.equals("X") || inputA.equals("T")) && (caratPos - inputA.length() == 0 || numericalA >= 0 )){
-                    workString = workString.substring(0, caratPos - inputA.length()) + replaceString + workString.substring(caratPos + inputB.length() + 1);
-
+                if(workString.charAt(caratPos + 2) == 't'){
+                    //| 1000
+                    command |= 0b1000_0000_0000_0000;
                 }
                 else{
-                    workString = workString.substring(0, caratPos - inputA.length()) + "+" + replaceString + workString.substring(caratPos + inputB.length() + 1);
+                    // 0000
                 }
 
+                int val = Integer.parseInt(value);
 
+                //| value into first bits
+                command |= val << 8;
 
             }
             System.out.println(workString);
+            workString = workString.substring(0, caratPos - leftLength) + "[t0]" + workString.substring(caratPos + rightLength+1);
+            System.out.println(workString);
+
+
+            equation.addOperator(index,command, 'e', 0);
+            System.out.println(Integer.toString(command,2));
        }
     }
-//
+
     private static String multCompile(String phrase, int index, boolean replace){
         String workString = phrase;
         boolean firstNegative = false;
         String replaceString = "t";
         int destination = 0;
+        int leftLength = 0;
+        int rightLength = 0;
         while(true) {
             int multPos = findFirstChar(0, '*', workString);
             int divPos = findFirstChar(0, '/', workString);
@@ -602,126 +520,92 @@ public class EquationLoader extends StringManipulator{
 
             String inputA = leftofOperator(operatorPos, workString);
             if(inputA.equals("x")){
-                //10
-                command = command | 1;
 
-            }
-            else if(inputA.equals("t")){
-                command = command | 15;
-                //01
+                // 0100 0000
+                command |= 0b0100_0000;
+                leftLength = 1;
 
-            }
-            else if(inputA.equals("X")){
-//                if(operatorPos - 1 == 0){
-                firstNegative = true;
-//                }
-                workString = workString.substring(0, operatorPos - 2)+ workString.substring(operatorPos - 1);
-                operatorPos --;
-                command = command | 1;
-                command = command | 16;
-            }
-            else if(inputA.equals("T")){
 
-                workString = workString.substring(0, operatorPos - 2) + workString.substring(operatorPos - 1);
-                operatorPos --;
-                System.out.println(workString);
-                command = command | 15;
-                command = command | 16;
             }
             else if(inputA.equals("]")){
-                if(replace){
-                    replaceString = "[t" + workString.charAt(operatorPos - 2) + "]";
-                    destination = workString.charAt(operatorPos - 2) - '0';
+
+
+
+                String value = leftofOperator(operatorPos-1, workString);
+                leftLength = value.length() + 3;
+
+                if(workString.charAt(operatorPos - 2 - value.length()) == 't'){
+                    //| 1000
+                    command |= 0b1000_0000;
                 }
-
-                int mask = (workString.charAt(operatorPos - 2) - '0' +1);
-
-                if(operatorPos > 5 && workString.charAt(operatorPos - 5) == '-'){
-                    mask = mask | 16;
+                else{
+                    // 0000
                 }
-                command = command | mask;
+                int val = Integer.parseInt(value);
 
-                workString = workString.substring(0, operatorPos - 4) + "t" + workString.substring(operatorPos);
-                operatorPos -= 3;
-            }
-            else{
-                numericalA = Double.parseDouble(inputA);
-
+                //| value into first bits
+                command |= val;
 
             }
 
             String inputB = rightofOperator(operatorPos, workString);
-
             if(inputB.equals("x")){
-                //001
-                command = command | 256;
-            }
-            else if(inputB.equals("t")){
-                //0001
-                command = command | 3840;
 
-            }
-            else if(inputB.equals("X")){
-
-                firstNegative = !firstNegative;
-                workString = workString.substring(0, operatorPos)+ workString.substring(operatorPos + 1);
+                // 0100 0000
+                command |= 0b0100_0000_0000_0000;
+                rightLength = 1;
 
 
-                command = command | 256;
-                command = command | 4352;
-            }
-            else if(inputB.equals("T")){
-                command = command | 3840;
-                command = command | 4352;
             }
             else if(inputB.equals("[")){
-                if(replace && replaceString.equals("t")){
-                    replaceString = "[t" + workString.charAt(operatorPos + 3) + "]";
-                    destination = workString.charAt(operatorPos+3) - '0';
-                }
-                int mask = workString.charAt(operatorPos+3) - '0'+1;
 
-                if(workString.charAt(operatorPos + 1) == '-'){
-                    mask = workString.charAt(operatorPos+4) - '0'+1;
-                    mask = mask | 16;
-                    destination = workString.charAt(operatorPos+4) - '0';
+                String value = rightofOperator(operatorPos + 2, workString);
+                rightLength = value.length() + 3;
+                if(workString.charAt(operatorPos + 2) == 't'){
+                    //| 1000
+                    command |= 0b1000_0000_0000_0000;
                 }
-                command = command | (mask << 8);
-                workString = workString.substring(0, operatorPos) + "t" + workString.substring(operatorPos + 4);
-            }
-            else{
-                System.out.println(workString);
-                numericalB = Double.parseDouble(inputB);
+                else{
+                    // 0000
+                }
+
+                int val = Integer.parseInt(value);
+
+                //| value into first bits
+                command |= val << 8;
 
             }
 
             if(command == 0){
                 if(op == 'm'){
-                    workString = workString.substring(0, operatorPos - inputA.length()) + (numericalA * numericalB) +  workString.substring(operatorPos + inputB.length()+1);
+//                    workString = workString.substring(0, operatorPos - inputA.length()) + (numericalA * numericalB) +  workString.substring(operatorPos + inputB.length()+1);
                 }
                 else{
-                    workString = workString.substring(0, operatorPos - inputA.length()) + (numericalA/ numericalB) +  workString.substring(operatorPos + inputB.length()+1);
+//                    workString = workString.substring(0, operatorPos - inputA.length()) + (numericalA/ numericalB) +  workString.substring(operatorPos + inputB.length()+1);
                 }
 
             }
             else{
-                if(operatorPos - inputA.length() == 1 || numericalA > 0 || numericalA == 0){
-                    workString = workString.substring(0, operatorPos - inputA.length()) + replaceString + workString.substring(operatorPos + inputB.length() + 1);
+//                if(operatorPos - inputA.length() == 1 || numericalA > 0 || numericalA == 0){
+//                    workString = workString.substring(0, operatorPos - inputA.length()) + replaceString + workString.substring(operatorPos + inputB.length() + 1);
+//
+//                }
+//                else{
+//                    workString = workString.substring(0, operatorPos - inputA.length()) + "+" + replaceString + workString.substring(operatorPos + inputB.length() + 1);
+//
+//                }
 
-                }
-                else{
-                    workString = workString.substring(0, operatorPos - inputA.length()) + "+" + replaceString + workString.substring(operatorPos + inputB.length() + 1);
+                workString = workString.substring(0, operatorPos - leftLength) + "[t0]"  + workString.substring(operatorPos + rightLength+1);
 
-                }
 
                 if(op == 'm'){
-                    equation.addOperator(index, command, 'm', numericalA, numericalB, destination);
+                    equation.addOperator(index, command, 'm', 0);
 
 
 
                 }
                 else{
-                    equation.addOperator(index, command, 'd', numericalA, numericalB, destination);
+                    equation.addOperator(index, command, 'd', 0);
                 }
             }
             System.out.println(workString);
@@ -729,11 +613,13 @@ public class EquationLoader extends StringManipulator{
 
         }
     }
-//
-    private static String addCompile(String phrase, int index, boolean replace){
+
+    private static String addCompile(String phrase, int index, int replace){
         String workString = phrase;
         String replaceString = "t";
         int destination = 0;
+        int leftLength = 0;
+        int rightLength = 0;
         while(true) {
             int addPos = findFirstChar(1, '+', workString);
             int subPos = findFirstChar(1, '-', workString);
@@ -742,6 +628,10 @@ public class EquationLoader extends StringManipulator{
 
             if(subPos == -1 && addPos == -1){
                 //end if there are no add/sub operators
+                //set the last destination to be the appropriate t
+                if(replace != 0){
+                    equation.setLastDestination(index, replace);
+                }
                 return workString;
             }
 
@@ -767,94 +657,59 @@ public class EquationLoader extends StringManipulator{
 
             String inputA = leftofOperator(operatorPos, workString);
             if(inputA.equals("x")){
-                //10
-                command = command | 1;
 
-            }
-            else if(inputA.equals("t")){
-                command = command | 15;
-                //01
+                // 0100 0000
+                command |= 0b0100_0000;
+                leftLength = 1;
 
-            }
-            else if(inputA.equals("X")){
-//                if(operatorPos - 1 == 0){
-//                }
-                workString = workString.substring(0, operatorPos - 2)+ workString.substring(operatorPos - 1);
-                operatorPos --;
-                command = command | 1;
-                command = command | 16;
-            }
-            else if(inputA.equals("T")){
 
-                workString = workString.substring(0, operatorPos - 2) + workString.substring(operatorPos - 1);
-                operatorPos --;
-                System.out.println(workString);
-                command = command | 15;
-                command = command | 16;
             }
             else if(inputA.equals("]")){
-                if(replace){
-                    replaceString = "[t" + workString.charAt(operatorPos - 2) + "]";
-                    destination = workString.charAt(operatorPos - 2) - '0';
-                }
-                int mask = (workString.charAt(operatorPos - 2) - '0' +1);
 
-                if(operatorPos > 5 && workString.charAt(operatorPos - 5) == '-'){
-                    mask = mask | 16;
-                }
-                command = command | mask;
-                workString = workString.substring(0, operatorPos - 4) + "t" + workString.substring(operatorPos);
-                operatorPos -= 3;
-            }
-            else{
-                numericalA = Double.parseDouble(inputA);
 
+
+                String value = leftofOperator(operatorPos-1, workString);
+                leftLength = value.length() + 3;
+
+                if(workString.charAt(operatorPos - 2 - value.length()) == 't'){
+                    //| 1000
+                    command |= 0b1000_0000;
+                }
+                else{
+                    // 0000
+                }
+                int val = Integer.parseInt(value);
+
+                //| value into first bits
+                command |= val;
 
             }
 
             String inputB = rightofOperator(operatorPos, workString);
-
             if(inputB.equals("x")){
-                //001
-                command = command | 256;
-            }
-            else if(inputB.equals("t")){
-                //0001
-                command = command | 3840;
 
-            }
-            else if(inputB.equals("X")){
-
-                workString = workString.substring(0, operatorPos)+ "+" +  workString.substring(operatorPos + 1);
+                // 0100 0000
+                command |= 0b0100_0000_0000_0000;
+                rightLength = 1;
 
 
-                command = command | 256;
-                command = command | 4352;
-            }
-            else if(inputB.equals("T")){
-                command = command | 3840;
-                command = command | 4352;
             }
             else if(inputB.equals("[")){
-                if(replace && replaceString.equals("t")){
-                    replaceString = "[t" + workString.charAt(operatorPos + 3) + "]";
-                    destination = workString.charAt(operatorPos+3) - '0';
-                }
-                int mask = workString.charAt(operatorPos+3) - '0'+1;
 
-                if(workString.charAt(operatorPos + 1) == '-' || op == 's'){
-                    mask = mask | 16;
+                String value = rightofOperator(operatorPos + 2, workString);
+                rightLength = value.length() + 3;
+                if(workString.charAt(operatorPos + 2) == 't'){
+                    //| 1000
+                    command |= 0b1000_0000_0000_0000;
+                }
+                else{
+                    // 0000
                 }
 
-                command = command | (mask << 8);
-                workString = workString.substring(0, operatorPos) + "t" + workString.substring(operatorPos + 4);
-            }
-            else{
-                System.out.println(workString);
-                numericalB = Double.parseDouble(inputB);
-                if(op == 's'){
-                    numericalB *= -1;
-                }
+                int val = Integer.parseInt(value);
+
+                //| value into first bits
+                command |= val << 8;
 
             }
 
@@ -868,21 +723,22 @@ public class EquationLoader extends StringManipulator{
             }
             else{
 
-//                if(op == 'a'){
-                    equation.addOperator(index, command, 'a', numericalA, numericalB, destination);
-                    workString = workString.substring(0, operatorPos - inputA.length()) + replaceString +  workString.substring(operatorPos + inputB.length()+1);
-//                }
-//                else{
-//                    equation.addOperator(command, 's', numericalA, numericalB);
-//                    workString = workString.substring(0, operatorPos - inputA.length()) + "t" +  workString.substring(operatorPos + inputB.length() + 1);
-//                }
+                workString = workString.substring(0, operatorPos - leftLength) + "[t0]"  + workString.substring(operatorPos + rightLength+1);
+
+
+                if(op == 'a'){
+                    equation.addOperator(index, command, 'a', 0);
+
+                }
+                else{
+                    equation.addOperator(index, command, 's', 0);
+                }
             }
         }
+
+
     }
-////
-////    private static String addCompile(String phrase){
-////
-////    }
+
 
 
 

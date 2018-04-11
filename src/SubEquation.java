@@ -11,8 +11,8 @@ public class SubEquation {
         this.equation = equation;
     }
 
-    public void addOperator(int command, char op, double a, double b, int destination){
-        this.operatorList.add(new Operator(command, op, a, b, destination));
+    public void addOperator(int command, char op, int destination){
+        this.operatorList.add(new Operator(command, op, destination));
     }
 
     public Operator getOperator(int index) {

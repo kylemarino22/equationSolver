@@ -35,15 +35,20 @@ public class EquationObject {
     public int getiListID(){
         return iList.size();
     }
+
+    public void setLastDestination(int index, int dest){
+        int size = equationList.get(index).getOperatorList().size();
+        equationList.get(index).getOperatorList().get(size - 1).setDestination(dest);
+    }
     public String getSubEquation(int index){
         return equationList.get(index).getEquation();
     }
-    public void addOperator(int index, int command, char op, double a, double b, int destination){
+    public void addOperator(int index, int command, char op, int destination){
         if(index != -1) {
-            equationList.get(index).addOperator(command, op, a, b, destination);
+            equationList.get(index).addOperator(command, op, destination);
         }
         else{
-            finalEquation.addOperator(command, op, a, b, destination);
+            finalEquation.addOperator(command, op, destination);
         }
     }
 
