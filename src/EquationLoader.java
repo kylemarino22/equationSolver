@@ -340,6 +340,58 @@ public class EquationLoader extends StringManipulator{
             }
         }
 
+
+
+
+
+
+        /*
+
+        Repeat:
+            Find set of <>
+            Find ,
+            create new using R and L of operator
+            Push to iList
+            replace
+
+
+         */
+
+        while(true){
+            int openPos = findFirstChar(0, '<', input);
+
+            if(openPos == -1){
+                break;
+            }
+
+            int closePos = findFirstChar(0, '>', input);
+            String workString = input.substring(openPos, closePos+1);
+
+            String rString = leftofOperator(findFirstChar(0, ',', workString), workString);
+            String iString = rightofOperator(findFirstChar(0, ',', workString), workString);
+            double r;
+            if(rString.length() == 0){
+                r = 0;
+            }
+            else{
+                r = Double.parseDouble(rString);
+            }
+
+            double i;
+            if(iString.length() == 0){
+                i = 0;
+            }
+            else{
+                i = Double.parseDouble(iString);
+            }
+
+            input = input.substring(0,openPos) +"[i" + equation.getiListID() + "]"+ input.substring(closePos+1);
+            equation.addiList(new ComplexDouble(r, i));
+            System.out.println(input);
+
+        }
+
+        equation.printiList();
         return "0";
 
 
