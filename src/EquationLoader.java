@@ -144,12 +144,15 @@ public class EquationLoader extends StringManipulator{
         String asd = "((2*x)*(4*x^2-23)+(4*x))^2*(x-3)";
         String p = "[t2]+[t1]-3";
 
-        String asad = "<1,2>*<3,5";
-        preliminaryCompiler(asd);
-        subCompiler();
-        System.out.println("\n");
-        System.out.println(equation.toString());
-        System.out.println(equation.evaluator(1));
+        String asad = "4*(((1+2i)*(3+5i-3))^(-3i)+(6-3i))^(3.23*x-3i)-13.23+0.434i";
+
+
+        imaginaryParser(asad);
+//        preliminaryCompiler(asd);
+//        subCompiler();
+//        System.out.println("\n");
+//        System.out.println(equation.toString());
+//        System.out.println(equation.evaluator(1));
 //        System.out.println(addCompile(multCompile(exponentCompile(s))));
 ////        System.out.println(leftofOperator(2, s));
 
@@ -193,8 +196,97 @@ public class EquationLoader extends StringManipulator{
         Repeat:
             Find the inner most set of parentheses
             if the only operator is + or -
+                Check if i- (indicates there is more than 1 imaginary number)
                 Convert into imaginary format
                 Replace with imaginary format
+
+        */
+
+        while(true){
+            int openPos = findLastChar('(', input);
+
+            if(openPos == -1){
+                break;
+            }
+
+            int closePos = findFirstChar(openPos, ')', input);
+            String workString = input.substring(openPos, closePos+1);
+
+            int numberCounter = 0;
+            if (findFirstChar(0,'*', workString) == -1 &&
+                findFirstChar(0,'/', workString) == -1 &&
+                findFirstChar(0,'^', workString) == -1){
+
+                System.out.println("IM HERESASDFASDFASDf");
+
+                //if the only operator is + or -
+
+                int numberFlag = 0;
+                for(int i = 0; i < workString.length(); i++){
+
+
+                    /*if char is in character array --> numberFlag = 1
+                      else
+                        if(numberFlag = 1){
+                            numberCounter++;
+
+                        }
+                        numberFlag = 0;
+
+
+                     */
+
+                    if (!(workString.charAt(i) == '-' || workString.charAt(i) == '+')){
+                        numberFlag = 1;
+                    }
+                    else {
+
+                        if (numberFlag == 1) {
+
+                            numberCounter++;
+                        }
+                        numberFlag = 0;
+                    }
+
+                }
+                System.out.println(numberCounter);
+
+            }
+            else{
+                input = input.substring(0,openPos) +"{" + workString.substring(1, workString.length()-1)+"}"+ input.substring(closePos+1);
+                continue;
+            }
+
+            if(numberCounter < 2){
+
+                //get operator position
+                int addOp = findLastChar('+', workString);
+                int subOp = findLastChar('-', workString);
+                int mainOp = 0;
+                String tempReplace = "";
+
+                if(subOp > addOp){
+                    tempReplace = leftofOperator(subOp, workString) + ",-" + rightofOperator(subOp, workString);
+                }
+                else{
+                    tempReplace = leftofOperator(addOp, workString) + "," + rightofOperator(addOp, workString);
+
+                }
+
+                input = input.substring(0,openPos) +"<" + tempReplace+ ">"+ input.substring(closePos+1);
+
+            }
+            else{
+                input = input.substring(0,openPos) +"{" + workString.substring(1, workString.length()-1)+"}"+ input.substring(closePos+1);
+            }
+
+
+            System.out.println("TESTING");
+            System.out.println(workString);
+            System.out.println(input);
+        }
+
+        /*
 
         Repeat:
             if inside <> continue
@@ -204,12 +296,51 @@ public class EquationLoader extends StringManipulator{
                 Convert to imaginary format
                 Replace with imaginary format
                 Reset Repeat
-            
-
-
 
          */
+        boolean insideBracket = false;
+        for(int i = 0; i < input.length(); i++){
+            //Continue if inside of brackets
+            if(input.charAt(i) == '>'){
+                insideBracket = false;
+            }
 
+            if(insideBracket){
+                continue;
+            }
+            if(input.charAt(i) == '<'){
+                insideBracket = true;
+                continue;
+            }
+
+
+            String validChar = "1234567890.";
+            if(findFirstChar(0, input.charAt(i), validChar) != -1){
+                String value = rightofOperator(i -1, input);
+
+                if(i + value.length() < input.length()){
+                    if(input.charAt(i + value.length()) == 'i'){
+                        //it is imaginary
+                        input = input.substring(0,i) +"<," + value + ">"+ input.substring(i + value.length()+1);
+                    }
+                    else {
+                        //it is real
+                        input = input.substring(0,i) +"<" + value + ",>"+ input.substring(i + value.length());
+                    }
+                }
+                else{
+                    //it is real
+                    input = input.substring(0,i) +"<" + value + ",>"+ input.substring(i + value.length());
+                }
+
+                System.out.println(input);
+                i = -1;
+                //i gets incremented at the bottom so is 0 at the top
+                insideBracket = false;
+            }
+        }
+
+        return "0";
 
 
     }
