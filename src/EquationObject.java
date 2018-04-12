@@ -3,7 +3,7 @@ import java.util.ArrayList;
 public class EquationObject {
     private ArrayList<SubEquation> equationList = new ArrayList<>();
     private ArrayList<ComplexDouble> varList = new ArrayList<>(); //real variables
-    private ArrayList<ComplexDouble> iList = new ArrayList<>(); //imaginary numbers
+    public ArrayList<ComplexDouble> iList = new ArrayList<>(); //imaginary numbers
     private SubEquation finalEquation;
 
 
@@ -42,7 +42,16 @@ public class EquationObject {
 
     public void setLastDestination(int index, int dest){
         int size = equationList.get(index).getOperatorList().size();
-        equationList.get(index).getOperatorList().get(size - 1).setDestination(dest);
+        if(size != 0){
+            equationList.get(index).getOperatorList().get(size - 1).setDestination(dest);
+        }
+        else{
+
+            //compilation step of reassigning [i] value to a [t] destination - only if ([i])
+            int loc = Integer.parseInt(StringManipulator.rightofOperator(1, equationList.get(index).getEquation()));
+            //only need loc of i
+            addOperator(index, loc,'@', dest);
+        }
     }
     public String getSubEquation(int index){
         return equationList.get(index).getEquation();
@@ -68,6 +77,10 @@ public class EquationObject {
     }
 
     public ComplexDouble evaluator (ComplexDouble x){
+        varList.clear();
+        varList.add(new ComplexDouble(0,0));
+
+
 
         for(int i = 0; i < equationList.size(); i++){
             for(Operator op : equationList.get(i).getOperatorList()) {
@@ -113,6 +126,7 @@ public class EquationObject {
         }
         else if((op.getCommand() & 0b0000_0000_1100_0000) == 0b0000_0000_1000_0000){
             int index = op.getCommand() & 0b0000_0000_0011_1111;
+            System.out.println(varList.size());
             base = varList.get(index);
         }
 
@@ -147,6 +161,9 @@ public class EquationObject {
                 break;
             case 's':
                 val = ComplexDouble.sub(base,exp);
+                break;
+            case '@':
+                val = base;
                 break;
         }
 

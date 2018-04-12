@@ -1,4 +1,5 @@
 import com.sun.javafx.scene.traversal.SubSceneTraversalEngine;
+import org.locationtech.jts.math;
 
 public class EquationLoader extends StringManipulator{
 
@@ -11,6 +12,7 @@ public class EquationLoader extends StringManipulator{
     }
 
     public static void test(){
+        DD a = new DD();
 
         String s = "";
         String as = "(3*(x-5)^2+2)^0.5-2*(3-x^2)^0.5";
@@ -142,55 +144,33 @@ public class EquationLoader extends StringManipulator{
          */
 //        compileEquation(s);
         String asd = "((2*x)*(4*x^2-23)+(4*x))^2*(x-3)";
-        String p = "((1+2i)^(3+5i))+(3*x)";
+        String p = "((2.7182818284^(7*3.14159265/12*((x^2-3)^0.5)))^2)*((x/3)-((x^2-3)^0.5)/3)-((x/3)-((x^2-3)^0.5)/3)";
+        String asad = "(2.7182818284^(7*3.14159265/12*((x^2-3)^0.5)))^2";
+//        String da = "(2.7182818284^(7*3.14159265/12*((x^2-3)^0.5)))^2";
+        String ba = "(0.12332i+2i)+3^(3+2i)";
+        //()
+//        ((2.7182818284^(7*3.14159265/12*((x^2-3)^0.5)))^2)*((x/3)-((x^2-3)^0.5)/3)-((x/3)-((x^2-3)^0.5)/3)
 
-        String asad = "4*(((1+2i)*(3+5i-3))^(-3i)+(6-3i))^(3.23*x-3i)-13.23+0.434i";
-
-
-
-        preliminaryCompiler(imaginaryParser(asad));
+        preliminaryCompiler(imaginaryParser(p));
+        System.out.println(equation.toString());
         subCompiler();
 //        System.out.println("\n");
         System.out.println(equation.toString());
 //        System.out.println(equation.evaluator(1));
 //        System.out.println(addCompile(multCompile(exponentCompile(s))));
 ////        System.out.println(leftofOperator(2, s));
+        //(9.3+5.3i)
 
-        System.out.println(equation.evaluator(new ComplexDouble(0.2, -3.2)));
-
+        System.out.println(equation.evaluator(new ComplexDouble(9.3, -5.3)));
+        System.out.println(equation.evaluator(new ComplexDouble(0.23423, 93404)));
+        System.out.println(equation.evaluator(new ComplexDouble(0.12616, 123.32)));
+        System.out.println(equation.evaluator(new ComplexDouble(-0.645, 356.61)));
+        System.out.println(equation.evaluator(new ComplexDouble(0.23412351341, -0.0102301023)));
+        System.out.println(equation.evaluator(new ComplexDouble(1.73205080756887729352, 0)));
 
     }
 
-    public static void preliminaryCompiler(String equationString){
-        while(true){
-            int pos = findLastChar('{', equationString);
-            if(pos == -1){
-                break;
-            }
-            int endPos = findFirstChar(pos, '}', equationString);
-
-            equation.addSubEquation(equationString.substring(pos+1, endPos));
-            equationString = equationString.substring(0, pos) +"[t" + equation.getSubEquationID() + "]"+equationString.substring(endPos+1);
-        }
-        equation.setFinalEquation(new SubEquation(equationString));
-    }
-
-    public static void subCompiler(){
-        String s = "";
-
-        for (int i = 0; i < equation.getSubEquationID(); i++){
-
-            s = exponentCompile(equation.getSubEquation(i), i, false);
-            s = multCompile(s, i, false);
-            addCompile(s, i, i+1);
-        }
-
-        s = exponentCompile(equation.getFinalEquation(), -1, false);
-        s = multCompile(s, -1, false);
-        addCompile(s, -1, 0);
-    }
-
-    public static String imaginaryParser(String input){
+    private static String imaginaryParser(String input){
         //4*(((1+2i)*(3+5i))^(-3i)+(6-3i))^(3.23*x-3i)-13.23+0.434i
         //<4,0>*((<1,2>*<3,5>^x)^<0,-3>+<6,3>)^(<3.23,0>*x+<0,-3>)+<-13.23,0.434>
 
@@ -217,8 +197,15 @@ public class EquationLoader extends StringManipulator{
 
             int numberCounter = 0;
             if (findFirstChar(0,'*', workString) == -1 &&
-                findFirstChar(0,'/', workString) == -1 &&
-                findFirstChar(0,'^', workString) == -1){
+                    findFirstChar(0,'/', workString) == -1 &&
+                    findFirstChar(0,'^', workString) == -1 &&
+                    findFirstChar(0,'x', workString) == -1){
+
+                if(findFirstChar(findFirstChar(0, 'i', workString) +1, 'i', workString) != -1){
+                    //break if there are more than 1 i
+                    input = input.substring(0,openPos) +"{" + workString.substring(1, workString.length()-1)+"}"+ input.substring(closePos+1);
+                    break;
+                }
 
                 System.out.println("IM HERESASDFASDFASDf");
 
@@ -269,14 +256,30 @@ public class EquationLoader extends StringManipulator{
                 String tempReplace = "";
 
                 if(subOp > addOp){
-                    tempReplace = leftofOperator(subOp, workString) + ",-" + rightofOperator(subOp, workString);
+                    if(workString.charAt(subOp + rightofOperator(subOp, workString).length()+1) == 'i'){
+                        tempReplace = leftofOperator(subOp, workString) + ",-" + rightofOperator(subOp, workString);
+                        input = input.substring(0,openPos) +"<" + tempReplace+ ">"+ input.substring(closePos+1);
+
+                    }
+                    else{
+                        input = input.substring(0,openPos) +"{" + workString.substring(1, workString.length()-1)+"}"+ input.substring(closePos+1);
+
+                    }
+
+                }
+                else if(subOp < addOp){
+                    if(workString.charAt(addOp + rightofOperator(addOp, workString).length()+1) == 'i'){
+                        tempReplace = leftofOperator(addOp, workString) + "," + rightofOperator(addOp, workString);
+                        input = input.substring(0,openPos) +"<" + tempReplace+ ">"+ input.substring(closePos+1);
+                    }
+                    else{
+                        input = input.substring(0,openPos) +"{" + workString.substring(1, workString.length()-1)+"}"+ input.substring(closePos+1);
+                    }
                 }
                 else{
-                    tempReplace = leftofOperator(addOp, workString) + "," + rightofOperator(addOp, workString);
-
+                    input = input.substring(0,openPos) +"{" + workString.substring(1, workString.length()-1)+"}"+ input.substring(closePos+1);
                 }
 
-                input = input.substring(0,openPos) +"<" + tempReplace+ ">"+ input.substring(closePos+1);
 
             }
             else{
@@ -400,6 +403,35 @@ public class EquationLoader extends StringManipulator{
 
     }
 
+    private static void preliminaryCompiler(String equationString){
+        while(true){
+            int pos = findLastChar('{', equationString);
+            if(pos == -1){
+                break;
+            }
+            int endPos = findFirstChar(pos, '}', equationString);
+
+            equation.addSubEquation(equationString.substring(pos+1, endPos));
+            equationString = equationString.substring(0, pos) +"[t" + equation.getSubEquationID() + "]"+equationString.substring(endPos+1);
+        }
+        equation.setFinalEquation(new SubEquation(equationString));
+    }
+
+    private static void subCompiler(){
+        String s = "";
+
+        for (int i = 0; i < equation.getSubEquationID(); i++){
+
+            s = exponentCompile(equation.getSubEquation(i), i, false);
+            s = multCompile(s, i, false);
+            addCompile(s, i, i+1);
+        }
+
+        s = exponentCompile(equation.getFinalEquation(), -1, false);
+        s = multCompile(s, -1, false);
+        addCompile(s, -1, 0);
+    }
+
     private static String exponentCompile(String phrase, int index, boolean replace){
 
         String workString = phrase;
@@ -472,14 +504,28 @@ public class EquationLoader extends StringManipulator{
                 command |= val << 8;
 
             }
-            System.out.println(workString);
-            workString = workString.substring(0, caratPos - leftLength) + "[t0]" + workString.substring(caratPos + rightLength+1);
-            System.out.println(workString);
+
+            if((command & 0b1100_0000_1100_0000) == 0){
+                int bLoc = Integer.parseInt(rightofOperator(caratPos + 2, workString));
+                int aLoc = Integer.parseInt(leftofOperator(caratPos - 1, workString));
+                ComplexDouble val = ComplexDouble.pwr(equation.iList.get(aLoc), equation.iList.get(bLoc));
+                equation.iList.set(aLoc, val);
+
+                workString = workString.substring(0, caratPos - leftLength) + "[i"+aLoc+"]" + workString.substring(caratPos + rightLength+1);
+                System.out.println("HEREEE");
+                System.out.println(workString);
+
+            }
+            else {
+                System.out.println(workString);
+                workString = workString.substring(0, caratPos - leftLength) + "[t0]" + workString.substring(caratPos + rightLength+1);
+                System.out.println(workString);
 
 
-            equation.addOperator(index,command, 'e', 0);
-            System.out.println(Integer.toString(command,2));
-       }
+                equation.addOperator(index,command, 'e', 0);
+                System.out.println(Integer.toString(command,2));
+            }
+        }
     }
 
     private static String multCompile(String phrase, int index, boolean replace){
@@ -578,13 +624,20 @@ public class EquationLoader extends StringManipulator{
 
             }
 
-            if(command == 0){
+
+
+            if((command & 0b1100_0000_1100_0000) == 0){
+                int bLoc = Integer.parseInt(rightofOperator(operatorPos + 2, workString));
+                int aLoc = Integer.parseInt(leftofOperator(operatorPos - 1, workString));
                 if(op == 'm'){
-//                    workString = workString.substring(0, operatorPos - inputA.length()) + (numericalA * numericalB) +  workString.substring(operatorPos + inputB.length()+1);
+                    ComplexDouble val = ComplexDouble.mult(equation.iList.get(aLoc), equation.iList.get(bLoc));
+                    equation.iList.set(aLoc, val);
+                    workString = workString.substring(0, operatorPos - leftLength) + "[i"+aLoc+"]" + workString.substring(operatorPos + rightLength+1);
                 }
                 else{
-//                    workString = workString.substring(0, operatorPos - inputA.length()) + (numericalA/ numericalB) +  workString.substring(operatorPos + inputB.length()+1);
-                }
+                    ComplexDouble val = ComplexDouble.div(equation.iList.get(aLoc), equation.iList.get(bLoc));
+                    equation.iList.set(aLoc, val);
+                    workString = workString.substring(0, operatorPos - leftLength) + "[i"+aLoc+"]" + workString.substring(operatorPos + rightLength+1);                }
 
             }
             else{
@@ -715,12 +768,18 @@ public class EquationLoader extends StringManipulator{
 
             }
 
-            if(command == 0){
-                    workString = workString.substring(0, operatorPos - inputA.length()) + (numericalA + numericalB) +  workString.substring(operatorPos + inputB.length()+1);
-
-//                else{
-//                    workString = workString.substring(0, operatorPos - inputA.length()) + (numericalA - numericalB) +  workString.substring(operatorPos + inputB.length());
-//                }
+            if((command & 0b1100_0000_1100_0000) == 0){
+                int bLoc = Integer.parseInt(rightofOperator(operatorPos + 2, workString));
+                int aLoc = Integer.parseInt(leftofOperator(operatorPos - 1, workString));
+                if(op == 'a'){
+                    ComplexDouble val = ComplexDouble.add(equation.iList.get(aLoc), equation.iList.get(bLoc));
+                    equation.iList.set(aLoc, val);
+                    workString = workString.substring(0, operatorPos - leftLength) + "[i"+aLoc+"]" + workString.substring(operatorPos + rightLength+1);
+                }
+                else{
+                    ComplexDouble val = ComplexDouble.sub(equation.iList.get(aLoc), equation.iList.get(bLoc));
+                    equation.iList.set(aLoc, val);
+                    workString = workString.substring(0, operatorPos - leftLength) + "[i"+aLoc+"]" + workString.substring(operatorPos + rightLength+1);                }
 
             }
             else{
@@ -740,9 +799,5 @@ public class EquationLoader extends StringManipulator{
 
 
     }
-
-
-
-
 
 }
