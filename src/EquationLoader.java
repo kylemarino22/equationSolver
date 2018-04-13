@@ -149,7 +149,7 @@ public class EquationLoader extends StringManipulator{
         //()
 //        ((2.7182818284^(7*3.14159265/12*((x^2-3)^0.5)))^2)*((x/3)-((x^2-3)^0.5)/3)-((x/3)-((x^2-3)^0.5)/3)
 
-        preliminaryCompiler(imaginaryParser(p));
+        preliminaryCompiler(imaginaryParser(ba));
         System.out.println(equation.toString());
         subCompiler();
 //        System.out.println("\n");
@@ -167,12 +167,16 @@ public class EquationLoader extends StringManipulator{
 //        System.out.println(equation.evaluator(new ComplexDouble(0.23412351341, -0.0102301023)));
 //        System.out.println(equation.evaluator(new ComplexDouble(1.73205080756887729352, 0)));
 //
+//        System.out.println();
+//        EquationSolver.loadBox(equation);
+        EquationSolver asdf = new EquationSolver();
+        asdf.solve(equation);
         System.out.println();
-        EquationSolver.loadBox(equation);
+//        EquationSolver.printSolveList();
         System.out.println();
-        EquationSolver.printSolveList();
+//        asdf.plotRot();
         System.out.println();
-        EquationSolver.plotRot();
+//        System.out.println(EquationSolver.windingValid());
 
 
     }

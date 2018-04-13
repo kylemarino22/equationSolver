@@ -61,5 +61,9 @@ public class ComplexDouble {
         return r +"\t"+ i;
     }
 
+    public ComplexDouble clone(){
+        return new ComplexDouble(r,i);
+    }
+
 }
 
