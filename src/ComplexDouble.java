@@ -43,6 +43,9 @@ public class ComplexDouble {
 
         //setup
         double absq = (a.r * a.r + a.i * a.i);
+        if(absq == 0){
+            return new ComplexDouble(0, 0);
+        }
         double arg = Math.atan2(a.i, a.r);
         double scalar = Math.pow(absq, b.r/2) * Math.exp(-b.i * arg);
         double temp = b.r*arg + 0.5*b.i*Math.log(absq);
@@ -55,7 +58,7 @@ public class ComplexDouble {
     }
 
     public String toString(){
-        return "r: " + r + " i: " + i;
+        return r +"\t"+ i;
     }
 
 }

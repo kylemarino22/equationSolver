@@ -126,7 +126,6 @@ public class EquationObject {
         }
         else if((op.getCommand() & 0b0000_0000_1100_0000) == 0b0000_0000_1000_0000){
             int index = op.getCommand() & 0b0000_0000_0011_1111;
-            System.out.println(varList.size());
             base = varList.get(index);
         }
 

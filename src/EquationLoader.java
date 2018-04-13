@@ -1,5 +1,4 @@
 import com.sun.javafx.scene.traversal.SubSceneTraversalEngine;
-import org.locationtech.jts.math;
 
 public class EquationLoader extends StringManipulator{
 
@@ -12,7 +11,6 @@ public class EquationLoader extends StringManipulator{
     }
 
     public static void test(){
-        DD a = new DD();
 
         String s = "";
         String as = "(3*(x-5)^2+2)^0.5-2*(3-x^2)^0.5";
@@ -147,7 +145,7 @@ public class EquationLoader extends StringManipulator{
         String p = "((2.7182818284^(7*3.14159265/12*((x^2-3)^0.5)))^2)*((x/3)-((x^2-3)^0.5)/3)-((x/3)-((x^2-3)^0.5)/3)";
         String asad = "(2.7182818284^(7*3.14159265/12*((x^2-3)^0.5)))^2";
 //        String da = "(2.7182818284^(7*3.14159265/12*((x^2-3)^0.5)))^2";
-        String ba = "(0.12332i+2i)+3^(3+2i)";
+        String ba = "(x^2)-4*x+5";
         //()
 //        ((2.7182818284^(7*3.14159265/12*((x^2-3)^0.5)))^2)*((x/3)-((x^2-3)^0.5)/3)-((x/3)-((x^2-3)^0.5)/3)
 
@@ -161,12 +159,21 @@ public class EquationLoader extends StringManipulator{
 ////        System.out.println(leftofOperator(2, s));
         //(9.3+5.3i)
 
-        System.out.println(equation.evaluator(new ComplexDouble(9.3, -5.3)));
-        System.out.println(equation.evaluator(new ComplexDouble(0.23423, 93404)));
-        System.out.println(equation.evaluator(new ComplexDouble(0.12616, 123.32)));
-        System.out.println(equation.evaluator(new ComplexDouble(-0.645, 356.61)));
-        System.out.println(equation.evaluator(new ComplexDouble(0.23412351341, -0.0102301023)));
-        System.out.println(equation.evaluator(new ComplexDouble(1.73205080756887729352, 0)));
+//        System.out.println(equation.evaluator(new ComplexDouble(0, 0)));
+//        System.out.println(ComplexDouble.pwr(new ComplexDouble(0,0), new ComplexDouble(2,0)));
+//        System.out.println(equation.evaluator(new ComplexDouble(2, -1)));
+//        System.out.println(equation.evaluator(new ComplexDouble(0.12616, 123.32)));
+//        System.out.println(equation.evaluator(new ComplexDouble(-0.645, 356.61)));
+//        System.out.println(equation.evaluator(new ComplexDouble(0.23412351341, -0.0102301023)));
+//        System.out.println(equation.evaluator(new ComplexDouble(1.73205080756887729352, 0)));
+//
+        System.out.println();
+        EquationSolver.loadBox(equation);
+        System.out.println();
+        EquationSolver.printSolveList();
+        System.out.println();
+        EquationSolver.plotRot();
+
 
     }
 
