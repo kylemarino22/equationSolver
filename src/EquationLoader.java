@@ -152,7 +152,7 @@ public class EquationLoader extends StringManipulator{
         //(-0.002926826477 + 2.95898723)
 //        ((2.7182818284^(7*3.14159265/12*((x^2-3)^0.5)))^2)*((x/3)-((x^2-3)^0.5)/3)-((x/3)-((x^2-3)^0.5)/3)
 
-        preliminaryCompiler(imaginaryParser(ta));
+        preliminaryCompiler(imaginaryParser(p));
 //        System.out.println(equation.toString());
         subCompiler();
 //        System.out.println("\n");

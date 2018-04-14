@@ -21,9 +21,9 @@ public class EquationSolver {
 
 
     //Box
-    private static ComplexDouble origin = new ComplexDouble(-1,-1);
-    private static double height = 2;
-    private static double width = 2;
+    private static ComplexDouble origin = new ComplexDouble(-0.1,-0.1);
+    private static double height = 3;
+    private static double width = 3;
     private static int numSteps = 12;
 
 
@@ -368,26 +368,35 @@ public class EquationSolver {
         }
 
         for(int i = 1; i < slopeList.size(); i++){
-            if(slopeList.get(i) > 1.333){
-                if(slopeList.get((i+1)%slopeList.size()) < 0){
+
+            if(slopeList.get(i) > 2.5){
+                winding++;
+            }
+            else if((slopeList.get(i) < -2.5)){
+                winding--;
+            }
+            else if(slopeList.get(i) > 1.333){
+                if(slopeList.get((i+1)%slopeList.size()) <= 0.0000001){
                     //next slope has to switch directions
 
-                    if(slopeList.get((i-1)) < 0) {
+                    if(slopeList.get((i-1)) <= 0.0000001) {
                         //prev slope has to have the same
                         winding++;
                     }
                 }
+
             }
             else if(slopeList.get(i) < -1.333){
-                if(slopeList.get((i+1)%slopeList.size()) > 0){
+                if(slopeList.get((i+1)%slopeList.size()) >= -0.0000001){
                     //next slope has to switch directions
-                    if(slopeList.get((i-1)) > 0) {
+                    if(slopeList.get((i-1)) >= -0.0000001) {
                         //prev slope has to have the same
                         winding--;
                     }
 
                 }
             }
+
         }
 
 
