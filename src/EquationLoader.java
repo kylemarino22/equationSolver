@@ -146,11 +146,14 @@ public class EquationLoader extends StringManipulator{
         String asad = "(2.7182818284^(7*3.14159265/12*((x^2-3)^0.5)))^2";
 //        String da = "(2.7182818284^(7*3.14159265/12*((x^2-3)^0.5)))^2";
         String ba = "(x^2)-4*x+5";
+        String ta = "(9i*x)^2+2i";
         //()
+
+        //(-0.002926826477 + 2.95898723)
 //        ((2.7182818284^(7*3.14159265/12*((x^2-3)^0.5)))^2)*((x/3)-((x^2-3)^0.5)/3)-((x/3)-((x^2-3)^0.5)/3)
 
-        preliminaryCompiler(imaginaryParser(ba));
-        System.out.println(equation.toString());
+        preliminaryCompiler(imaginaryParser(ta));
+//        System.out.println(equation.toString());
         subCompiler();
 //        System.out.println("\n");
         System.out.println(equation.toString());
@@ -169,6 +172,8 @@ public class EquationLoader extends StringManipulator{
 //
 //        System.out.println();
 //        EquationSolver.loadBox(equation);
+
+
         EquationSolver asdf = new EquationSolver();
         asdf.solve(equation);
         System.out.println();
