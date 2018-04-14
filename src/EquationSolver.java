@@ -21,9 +21,9 @@ public class EquationSolver {
 
 
     //Box
-    private static ComplexDouble origin = new ComplexDouble(-2,-2);
-    private static double height = 5;
-    private static double width = 5;
+    private static ComplexDouble origin = new ComplexDouble(-1,-1);
+    private static double height = 2;
+    private static double width = 2;
     private static int numSteps = 12;
 
 
@@ -51,7 +51,7 @@ public class EquationSolver {
 
         //refine solutionlist --> new solutionList
 
-        for(int i = 0; i <13; i++){
+        for(int i = 0; i <31; i++){
             refineAnswers(solutionList, cutVert, equation);
             cutVert = !cutVert;
         }
@@ -137,8 +137,9 @@ public class EquationSolver {
                 printSolveList(solutionB.sList);
 //                System.out.println("HELLO");
 //                System.out.println(windingValid(solutionA.sList));
+                plotRot(solutionA.sList);
                 plotRot(solutionB.sList);
-//                plotRot(solutionA.sList);
+
 
                 System.out.println();
                 System.out.println("HEREIA");
@@ -205,8 +206,9 @@ public class EquationSolver {
 //                System.out.println();
                 System.out.println();
                 printSolveList(solutionB.sList);
-                plotRot(solutionB.sList);
                 plotRot(solutionA.sList);
+                plotRot(solutionB.sList);
+
 
                 System.out.println();
                 System.out.println("HEREIO");
@@ -278,60 +280,61 @@ public class EquationSolver {
         int winding = 0;
         ArrayList<Double> slopeList = new ArrayList<>();
 
-        double currentAngle = Polar.toPolar(box.get(0)).t*2;
-
         /*
         10, -10, -50, -100, 170, 69, 3
 
          */
         for(int i = 1; i < box.size()+2; i++) {
-            double newAngle = Polar.toPolar(box.get(i%box.size())).t *2;
-            double tempAngle = newAngle;
-            double currCopy = currentAngle;
+            double currAngle = Polar.toPolar(box.get(i%box.size())).t *2;
+            double prevAngle = Polar.toPolar(box.get((i+1)%box.size())).t *2;
 
-            if(tempAngle < 0){
-                tempAngle += Math.PI * 2;
-            }
-
-            if(currentAngle < 0){
-                currentAngle += Math.PI * 2;
-            }
-
-            double ccwDistance;
-            double cwDistance;
-
-            if(tempAngle > currentAngle){
-                ccwDistance = Math.abs(tempAngle - currentAngle);
-                cwDistance = Math.abs(2*Math.PI - ccwDistance);
-            }
-            else{
-                cwDistance = Math.abs(tempAngle - currentAngle);
-                ccwDistance = Math.abs(2*Math.PI - cwDistance);
-            }
-            boolean CCW = false;
-            if(ccwDistance < cwDistance){
-                CCW = true;
-            }
-
-            if(CCW){
-                System.out.println(i + ": CCW");
-                //ccw
-                if(currCopy < 0 && newAngle >0){
-                    System.out.println("HERE4");
-                    winding++;
-                }
-            }
-            else{
-                //cw
-                System.out.println(i+ ": CW");
-                if(currCopy > 0 && newAngle <0){
-                    System.out.println("HERE5");
-                    System.out.println("tA: " + tempAngle + "\tcA: " + currentAngle);
-
-                    winding--;
-                }
-
-            }
+            slopeList.add(currAngle - prevAngle);
+//            double tempAngle = newAngle;
+//            double currCopy = currentAngle;
+//
+//            if(tempAngle < 0){
+//                tempAngle += Math.PI * 2;
+//            }
+//
+//            if(currentAngle < 0){
+//                currentAngle += Math.PI * 2;
+//            }
+//
+//            double ccwDistance;
+//            double cwDistance;
+//
+//            if(tempAngle > currentAngle){
+//                ccwDistance = Math.abs(tempAngle - currentAngle);
+//                cwDistance = Math.abs(2*Math.PI - ccwDistance);
+//            }
+//            else{
+//                cwDistance = Math.abs(tempAngle - currentAngle);
+//                ccwDistance = Math.abs(2*Math.PI - cwDistance);
+//            }
+//            boolean CCW = false;
+//            if(ccwDistance < cwDistance){
+//                CCW = true;
+//            }
+//
+//            if(CCW){
+//                System.out.println(i + ": CCW");
+//                //ccw
+//                if(currCopy < 0 && newAngle >0){
+//                    System.out.println("HERE4");
+//                    winding++;
+//                }
+//            }
+//            else{
+//                //cw
+//                System.out.println(i+ ": CW");
+//                if(currCopy > 0 && newAngle <0){
+//                    System.out.println("HERE5");
+//                    System.out.println("tA: " + tempAngle + "\tcA: " + currentAngle);
+//
+//                    winding--;
+//                }
+//
+//            }
 
 
 //            if(ccwDistance < cwDistance){
@@ -362,7 +365,29 @@ public class EquationSolver {
 
             //if cw and + to -, winding --
 
-            currentAngle = newAngle;
+        }
+
+        for(int i = 1; i < slopeList.size(); i++){
+            if(slopeList.get(i) > 1.333){
+                if(slopeList.get((i+1)%slopeList.size()) < 0){
+                    //next slope has to switch directions
+
+                    if(slopeList.get((i-1)) < 0) {
+                        //prev slope has to have the same
+                        winding++;
+                    }
+                }
+            }
+            else if(slopeList.get(i) < -1.333){
+                if(slopeList.get((i+1)%slopeList.size()) > 0){
+                    //next slope has to switch directions
+                    if(slopeList.get((i-1)) > 0) {
+                        //prev slope has to have the same
+                        winding--;
+                    }
+
+                }
+            }
         }
 
 
