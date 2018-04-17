@@ -142,17 +142,19 @@ public class EquationLoader extends StringManipulator{
          */
 //        compileEquation(s);
         String asd = "((2*x)*(4*x^2-23)+(4*x))^2*(x-3)";
-        String p = "((2.7182818284^(7*3.14159265/12*((x^2-3)^0.5)))^2)*((x/3)-((x^2-3)^0.5)/3)-((x/3)-((x^2-3)^0.5)/3)";
-        String asad = "(2.7182818284^(7*3.14159265/12*((x^2-3)^0.5)))^2";
+        String p = "(2.7182818284^(7*3.14159265/12*((x^2-3)^0.5)))^2";
+        String asad = "(2.7182818284^(5*x))-1";
 //        String da = "(2.7182818284^(7*3.14159265/12*((x^2-3)^0.5)))^2";
         String ba = "(x^2)-4*x+5";
         String ta = "(9i*x)^2+2i";
+        String pa = "3.2i*(x^2)+(4*x)-2i";
+        String jamir = "(x+3i)";
         //()
 
         //(-0.002926826477 + 2.95898723)
 //        ((2.7182818284^(7*3.14159265/12*((x^2-3)^0.5)))^2)*((x/3)-((x^2-3)^0.5)/3)-((x/3)-((x^2-3)^0.5)/3)
 
-        preliminaryCompiler(imaginaryParser(p));
+        preliminaryCompiler(imaginaryParser(asad));
 //        System.out.println(equation.toString());
         subCompiler();
 //        System.out.println("\n");
@@ -176,11 +178,13 @@ public class EquationLoader extends StringManipulator{
 
         EquationSolver asdf = new EquationSolver();
         asdf.solve(equation);
-        System.out.println();
+//        System.out.println();
 //        EquationSolver.printSolveList();
-        System.out.println();
-//        asdf.plotRot();
-        System.out.println();
+//        System.out.println();
+//        asdf.printSolveList(asdf.sL);
+////        asdf.plotRot();
+//        System.out.println();
+//        System.out.println(equation.evaluator(new ComplexDouble(2, 1)));
 //        System.out.println(EquationSolver.windingValid());
 
 

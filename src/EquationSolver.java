@@ -21,9 +21,9 @@ public class EquationSolver {
 
 
     //Box
-    private static ComplexDouble origin = new ComplexDouble(-0.1,-0.1);
-    private static double height = 3;
-    private static double width = 3;
+    private static ComplexDouble origin = new ComplexDouble(-2,-2);
+    private static double height = 4;
+    private static double width = 4;
     private static int numSteps = 12;
 
 
@@ -36,9 +36,13 @@ public class EquationSolver {
 
 
     public void solve(EquationObject equation){
+        System.out.println("asdfasdfasdf");
         //loadBox
         originalSolveList.sList = loadBox(equation, origin, height, width);
         //if is winding
+        System.out.println("HAHAHAHA");
+        printSolveList(originalSolveList.sList);
+
         if(!windingValid(originalSolveList.sList)){
             plotRot(originalSolveList.sList);
             return;
@@ -50,8 +54,9 @@ public class EquationSolver {
         boolean cutVert = true;
 
         //refine solutionlist --> new solutionList
+        System.out.println("HAEAFasdf");
 
-        for(int i = 0; i <31; i++){
+        for(int i = 0; i <0; i++){
             refineAnswers(solutionList, cutVert, equation);
             cutVert = !cutVert;
         }
@@ -62,7 +67,10 @@ public class EquationSolver {
             System.out.println(centerBox(solutionList.get(i).origin, solutionList.get(i).height, solutionList.get(i).width));
         }
 
+        printSolveList(solutionList.get(0).sList);
+
         System.out.println();
+
         System.out.println(solutionList.get(0).origin);
         System.out.println(solutionList.get(0).height);
         System.out.println(solutionList.get(0).width);
@@ -236,29 +244,138 @@ public class EquationSolver {
 
     public ArrayList<ComplexDouble> loadBox(EquationObject equation, ComplexDouble origin, double height, double width){
 
+
+        /*
+        Flow Design
+        Find Initial Two points - Distance height/Constant
+        Measure angle between nth point and n-1 point;
+        Shift += (DesiredAngle - measuredAngle) * -constant;
+
+
+        Next Point - Distance height/shift - Decreases when shift increases
+
+
+
+         */
+
         ArrayList<ComplexDouble> sList = new ArrayList<>();
 
-        //left starting from bL going to tL (25 calculations)
-        for(int i = 0; i < numSteps; i++){
-            ComplexDouble input = new ComplexDouble(origin.r, + origin.i + (i*height/numSteps));
+        // Left up
+        double positionIteration = 0;
+        double incrementScalar = 10;
+        double desiredAngle = Math.PI/6;
+        double shift = 0;
+
+        //calculate 1st point
+        ComplexDouble input = new ComplexDouble(origin.r, origin.i);
+        sList.add((equation.evaluator(input)));
+
+        //calculate 2nd point
+        input = new ComplexDouble(origin.r, origin.i + height/incrementScalar);
+        sList.add((equation.evaluator(input)));
+
+        for(int i = 2; positionIteration < height + origin.i; i++){
+
+            double measuredAngleDiff = Math.atan(sList.get(i - 2).i/sList.get(i - 2).r) - Math.atan(sList.get(i - 1).i/sList.get(i - 1).r);
+            shift += -(desiredAngle - measuredAngleDiff);
+
+            //
+            if(shift > 100){
+                shift = 100;
+            }
+            if(shift < 10){
+                shift = 10;
+            }
+
+            positionIteration = origin.i + (i*height/shift);
+            System.out.println(positionIteration);
+
+            input = new ComplexDouble(origin.r, positionIteration);
             sList.add((equation.evaluator(input)));
 
         }
-        for(int i = 0; i < numSteps; i++){
-            ComplexDouble input = new ComplexDouble(origin.r + (i*width/numSteps),  origin.i + height);
+
+        input = new ComplexDouble(origin.r + width/incrementScalar, origin.i + height);
+        sList.add((equation.evaluator(input)));
+
+        positionIteration = 0;
+        for(int i = 1; positionIteration < height + origin.r; i++){
+
+            double measuredAngleDiff = Math.atan(sList.get(sList.size() - 3).i/sList.get(sList.size() - 3).r) - Math.atan(sList.get(sList.size() - 2).i/sList.get(sList.size() - 2).r);
+            shift += -(desiredAngle - measuredAngleDiff);
+
+            //
+            if(shift > 100){
+                shift = 100;
+            }
+            if(shift < 10){
+                shift = 10;
+            }
+
+            positionIteration = origin.r + (i*height/shift);
+            System.out.println(positionIteration);
+
+            input = new ComplexDouble(positionIteration, origin.i + height);
             sList.add((equation.evaluator(input)));
 
         }
-        for(int i = 0; i < numSteps; i++){
-            ComplexDouble input = new ComplexDouble(origin.r + width,  origin.i + height - (i*height/numSteps));
+
+        input = new ComplexDouble(origin.r + width, origin.i + height - height/incrementScalar);
+        sList.add((equation.evaluator(input)));
+
+        for(int i = 1; positionIteration > origin.i; i++){
+
+            double measuredAngleDiff = Math.atan(sList.get(sList.size() - 3).i/sList.get(sList.size() - 3).r) - Math.atan(sList.get(sList.size() - 2).i/sList.get(sList.size() - 2).r);
+            shift += -(desiredAngle - measuredAngleDiff);
+
+            //
+            if(shift > 100){
+                shift = 100;
+            }
+            if(shift < 10){
+                shift = 10;
+            }
+            System.out.println(shift);
+            positionIteration = origin.i - (i*height/shift);
+            System.out.println(positionIteration);
+            System.out.println("HELLO");
+
+            input = new ComplexDouble(origin.r + width, positionIteration);
             sList.add((equation.evaluator(input)));
 
         }
-        for(int i = 0; i < numSteps; i++){
-            ComplexDouble input = new ComplexDouble(origin.r + width - (i*width/numSteps),  origin.i);
-            sList.add((equation.evaluator(input)));
 
-        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//        for(int i = 0; i < numSteps; i++){
+//            ComplexDouble input = new ComplexDouble(origin.r + (i*width/numSteps),  origin.i + height);
+//            sList.add((equation.evaluator(input)));
+//
+//        }
+//        for(int i = 0; i < numSteps; i++){
+//            ComplexDouble input = new ComplexDouble(origin.r + width,  origin.i + height - (i*height/numSteps));
+//            sList.add((equation.evaluator(input)));
+//
+//        }
+//        for(int i = 0; i < numSteps; i++){
+//            ComplexDouble input = new ComplexDouble(origin.r + width - (i*width/numSteps),  origin.i);
+//            sList.add((equation.evaluator(input)));
+//
+//        }
         return sList;
     }
 
