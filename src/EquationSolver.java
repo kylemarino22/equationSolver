@@ -1,3 +1,5 @@
+import com.sun.javafx.scene.traversal.SubSceneTraversalEngine;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
@@ -21,7 +23,7 @@ public class EquationSolver {
 
 
     //Box
-    private static ComplexDouble origin = new ComplexDouble(-2,-2);
+    private static ComplexDouble origin = new ComplexDouble(-1,-5);
     private static double height = 4;
     private static double width = 4;
     private static int numSteps = 12;
@@ -56,13 +58,13 @@ public class EquationSolver {
         //refine solutionlist --> new solutionList
         System.out.println("HAEAFasdf");
 
-        for(int i = 0; i <0; i++){
+        for(int i = 0; i <10; i++){
             refineAnswers(solutionList, cutVert, equation);
             cutVert = !cutVert;
         }
 
 
-        System.out.println("\n");
+        System.out.println("\nSolutions:");
         for(int i = 0; i < solutionList.size(); i++){
             System.out.println(centerBox(solutionList.get(i).origin, solutionList.get(i).height, solutionList.get(i).width));
         }
@@ -259,89 +261,153 @@ public class EquationSolver {
          */
 
         ArrayList<ComplexDouble> sList = new ArrayList<>();
+        ArrayList<ComplexDouble> sampleList = new ArrayList<>();
+
 
         // Left up
         double positionIteration = 0;
         double incrementScalar = 10;
         double desiredAngle = Math.PI/6;
         double shift = 0;
+        ComplexDouble input;
 
-        //calculate 1st point
-        ComplexDouble input = new ComplexDouble(origin.r, origin.i);
-        sList.add((equation.evaluator(input)));
+//        //calculate 1st point
+//        ComplexDouble input = new ComplexDouble(origin.r, origin.i);
+//        sList.add((equation.evaluator(input)));
+//
+//        //calculate 2nd point
+//        input = new ComplexDouble(origin.r, origin.i + height/incrementScalar);
+//        sList.add((equation.evaluator(input)));
+//
+        for(int i = 0; i < 10; i++){
 
-        //calculate 2nd point
-        input = new ComplexDouble(origin.r, origin.i + height/incrementScalar);
-        sList.add((equation.evaluator(input)));
 
-        for(int i = 2; positionIteration < height + origin.i; i++){
-
-            double measuredAngleDiff = Math.atan(sList.get(i - 2).i/sList.get(i - 2).r) - Math.atan(sList.get(i - 1).i/sList.get(i - 1).r);
-            shift += -(desiredAngle - measuredAngleDiff);
-
-            //
-            if(shift > 100){
-                shift = 100;
-            }
-            if(shift < 10){
-                shift = 10;
-            }
-
-            positionIteration = origin.i + (i*height/shift);
+            positionIteration = origin.i + (i*height/10);
             System.out.println(positionIteration);
 
             input = new ComplexDouble(origin.r, positionIteration);
+            sampleList.add(input);
+
             sList.add((equation.evaluator(input)));
 
         }
 
-        input = new ComplexDouble(origin.r + width/incrementScalar, origin.i + height);
-        sList.add((equation.evaluator(input)));
+        for(int i = 1; i<10; i++){
 
-        positionIteration = 0;
-        for(int i = 1; positionIteration < height + origin.r; i++){
 
-            double measuredAngleDiff = Math.atan(sList.get(sList.size() - 3).i/sList.get(sList.size() - 3).r) - Math.atan(sList.get(sList.size() - 2).i/sList.get(sList.size() - 2).r);
-            shift += -(desiredAngle - measuredAngleDiff);
-
-            //
-            if(shift > 100){
-                shift = 100;
-            }
-            if(shift < 10){
-                shift = 10;
-            }
-
-            positionIteration = origin.r + (i*height/shift);
+            positionIteration = origin.r + (i*height/10);
             System.out.println(positionIteration);
 
             input = new ComplexDouble(positionIteration, origin.i + height);
+
+            sampleList.add(input);
+            sList.add((equation.evaluator(input)));
+
+        }
+//
+//        input = new ComplexDouble(origin.r + width, origin.i + height - height/incrementScalar);
+//        sList.add((equation.evaluator(input)));
+//
+//        System.out.println("\n\n");
+//
+//        positionIteration = height + origin.i;
+//        shift = 100;
+        for(int i = 0; i<10; i++){
+
+//            double angle1 = Math.atan(sList.get(sList.size() - 3).i/sList.get(sList.size() - 3).r);
+//            if(angle1 < 0){
+//                angle1 += Math.PI * 2;
+//            }
+//
+//            double angle2 = Math.atan(sList.get(sList.size() - 2).i/sList.get(sList.size() - 2).r);
+//            if(angle2 < 0){
+//                angle2 += Math.PI * 2;
+//            }
+//
+//
+//            double measuredAngleDiff = angle1 - angle2;
+//            shift += -(desiredAngle - measuredAngleDiff) * 3;
+
+
+
+            //
+//            if(shift > 100){
+//                shift = 100;
+//            }
+//            if(shift < 10){
+//                shift = 10;
+//            }
+
+            shift = 10;
+//            System.out.println(i);
+//            System.out.println("angleDiff: " + measuredAngleDiff);
+//            System.out.println("shift: " + shift);
+//            System.out.println(angle1);
+//            System.out.println(angle2);
+
+
+            positionIteration = origin.i + height - (i*height/shift);
+
+            input = new ComplexDouble(origin.r + width, positionIteration);
+            sampleList.add(input);
+            sList.add((equation.evaluator(input)));
+//            System.out.println(positionIteration + "\t" + sList.get(sList.size()-1));
+
+        }
+
+
+        for(int i = 0; i<10; i++){
+
+            positionIteration = origin.r + width - (i*width/shift);
+
+            input = new ComplexDouble( positionIteration, origin.i);
+            sampleList.add(input);
             sList.add((equation.evaluator(input)));
 
         }
 
-        input = new ComplexDouble(origin.r + width, origin.i + height - height/incrementScalar);
-        sList.add((equation.evaluator(input)));
 
-        for(int i = 1; positionIteration > origin.i; i++){
-
-            double measuredAngleDiff = Math.atan(sList.get(sList.size() - 3).i/sList.get(sList.size() - 3).r) - Math.atan(sList.get(sList.size() - 2).i/sList.get(sList.size() - 2).r);
-            shift += -(desiredAngle - measuredAngleDiff);
-
-            //
-            if(shift > 100){
-                shift = 100;
+        printSolveList(sList);
+        int counter = 0;
+        for(int i=1; i < sList.size();i++){
+            double angle1 = Math.atan2(sList.get(i).i, sList.get(i).r);
+            if(angle1 < 0){
+                angle1 += Math.PI * 2;
             }
-            if(shift < 10){
-                shift = 10;
-            }
-            System.out.println(shift);
-            positionIteration = origin.i - (i*height/shift);
-            System.out.println(positionIteration);
-            System.out.println("HELLO");
 
-            input = new ComplexDouble(origin.r + width, positionIteration);
-            sList.add((equation.evaluator(input)));
+            double angle2 = Math.atan2(sList.get(i-1).i, sList.get(i-1).r);
+            if(angle2 < 0){
+                angle2 += Math.PI * 2;
+            }
+
+            System.out.println(i);
+            System.out.println(angle1);
+
+            double measuredAngleDiff = Math.abs(angle1 - angle2);
+            double otherMeasuredAngleDiff = Math.PI*2 - measuredAngleDiff;
+
+            if(otherMeasuredAngleDiff < measuredAngleDiff){
+                measuredAngleDiff = otherMeasuredAngleDiff;
+            }
+            System.out.println(measuredAngleDiff);
+
+            if(measuredAngleDiff > Math.PI/6){ // PI/12 is the minimum distance between points
+                counter ++;
+                System.out.println(sampleList.get(i) + "\t" + sList.get(i));
+                System.out.println(sampleList.get(i-1) + "\t" + sList.get(i-1));
+                System.out.println(Math.atan2(sList.get(i-1).i, sList.get(i-1).r));
+                System.out.println("Angle1: " + angle1);
+                System.out.println("Angle2: " + angle2);
+
+
+                ComplexDouble samplePoint = new ComplexDouble((sampleList.get(i).r+ sampleList.get(i-1).r) / 2, (sampleList.get(i).i+ sampleList.get(i-1).i)/2);
+                sampleList.add(i, samplePoint);
+                sList.add(i, (equation.evaluator(samplePoint)));
+                System.out.println(sList.get(i));
+                i = 0;
+            }
+
+
 
         }
 
@@ -376,6 +442,7 @@ public class EquationSolver {
 //            sList.add((equation.evaluator(input)));
 //
 //        }
+        plotRot(sList);
         return sList;
     }
 
