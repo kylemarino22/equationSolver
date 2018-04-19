@@ -16,6 +16,12 @@ public class Polar {
         return new Polar(r,t);
     }
 
+    public static double radius(ComplexDouble c){
+        double r = Math.pow((c.i * c.i+ c.r * c.r), 0.5);
+        return r;
+
+    }
+
     public String toString(){
         return "r: " + r + " t: " + t;
     }
