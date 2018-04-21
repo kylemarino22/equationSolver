@@ -23,7 +23,7 @@ public class EquationSolver {
 
 
     //Box
-    private static ComplexDouble origin = new ComplexDouble(-1,-3);
+    private static ComplexDouble origin = new ComplexDouble(-1.01,-3.01);
     private static double height = 7;
     private static double width = 3;
     private static int numSteps = 12;
@@ -55,12 +55,13 @@ public class EquationSolver {
             ArrayList<solveList> solutionList = new ArrayList<>();
             solutionList.add(originalSolveList);
 
+
             boolean cutVert = true;
 
             //refine solutionlist --> new solutionList
             System.out.println("HAEAFasdf");
 
-            for (int i = 0; i < 1; i++) {
+            for (int i = 0; i < 40; i++) {
                 if(solutionList.size() != 0){
                     refineAnswers(solutionList, cutVert, equation);
                     cutVert = !cutVert;
@@ -73,7 +74,8 @@ public class EquationSolver {
                 for (int i = 0; i < solutionList.size(); i++) {
                     System.out.println(centerBox(solutionList.get(i).origin, solutionList.get(i).height, solutionList.get(i).width));
                 }
-                printSolveList(solutionList.get(0).sList);
+
+//                printSolveList(solutionList.get(0).sList);
 
             }
 
@@ -297,10 +299,10 @@ public class EquationSolver {
 
         }
 
-        for(int i = 1; i<10; i++){
+        for(int i = 0; i<10; i++){
 
 
-            positionIteration = origin.r + (i*height/10);
+            positionIteration = origin.r + (i*width/10);
             System.out.println(positionIteration);
 
             input = new ComplexDouble(positionIteration, origin.i + height);
@@ -361,28 +363,34 @@ public class EquationSolver {
         }
 
 
+        System.out.println("PRINTING HERE!!!");
         for(int i = 0; i<10; i++){
 
-            positionIteration = origin.r + width - (i*width/shift);
+            positionIteration = origin.r + width - (i*width/10);
 
             input = new ComplexDouble( positionIteration, origin.i);
+            System.out.println(positionIteration +"\t"+origin.i);
             sampleList.add(input);
             sList.add((equation.evaluator(input)));
 
         }
 
-
         System.out.println("Printing PreSolveList: ");
         printSolveList(sList);
-        int counter = 0;
+
+                int counter = 0;
+
+
+
         for(int i=1; i < sList.size();i++){
 
 
             if(i > 55){
                 System.out.println("Printing SolveList: ");
                 System.out.println(sList.size());
+                printSolveList(sampleList);
                 printSolveList(sList);
-                while(true);
+//                while(true);
 
             }
 
@@ -467,7 +475,16 @@ public class EquationSolver {
 //            sList.add((equation.evaluator(input)));
 //
 //        }
+
+        System.out.println("Printing ASDFSolveList: ");
+        printSolveList(sList);
         plotRot(sList);
+
+//        for(int i = 0; i < 1; i++){
+//            while(true);
+//
+//        }
+
         return sList;
     }
 
