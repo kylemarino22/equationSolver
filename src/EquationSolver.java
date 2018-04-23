@@ -23,9 +23,9 @@ public class EquationSolver {
 
 
     //Box
-    private static ComplexDouble origin = new ComplexDouble(-1.01,-3.01);
-    private static double height = 7;
-    private static double width = 3;
+    private static ComplexDouble origin = new ComplexDouble(-2.01,-2.01);
+    private static double height = 4;
+    private static double width = 4;
     private static int numSteps = 12;
 
 
@@ -38,13 +38,18 @@ public class EquationSolver {
 
 
     public void solve(EquationObject equation){
-        System.out.println("asdfasdfasdf");
+//        System.out.println("asdfasdfasdf");
         //loadBox
-        originalSolveList.sList = loadBox(equation, origin, height, width);
+        printSolveList(loadBox(equation, origin, height, width, 0));
+        originalSolveList.sList = loadBox(equation, origin, height, width, 1);
+        System.out.println("here");
+//        printSolveList(originalSolveList.sList);
+
         //if is winding
-        System.out.println("HAHAHAHA");
+//        System.out.println("HAHAHAHA");
         if(originalSolveList.sList != null) {
-            printSolveList(originalSolveList.sList);
+            //print sample area
+            printSolveList(loadBox(equation, origin, height, width, 1));
 
 
             if (!windingValid(originalSolveList.sList)) {
@@ -59,9 +64,9 @@ public class EquationSolver {
             boolean cutVert = true;
 
             //refine solutionlist --> new solutionList
-            System.out.println("HAEAFasdf");
+//            System.out.println("HAEAFasdf");
 
-            for (int i = 0; i < 40; i++) {
+            for (int i = 0; i < 105; i++) {
                 if(solutionList.size() != 0){
                     refineAnswers(solutionList, cutVert, equation);
                     cutVert = !cutVert;
@@ -119,8 +124,8 @@ public class EquationSolver {
 
 
                 //copy into new arrays
-                System.out.println("here");
-                System.out.println(i);
+//                System.out.println("here");
+//                System.out.println(i);
 //                for(int j = 0; j < solutionList.get(i).sList.size(); j++){
 //                    solutionA.sList.add(solutionList.get(i).sList.get(j).clone());
 //                    solutionB.sList.add(solutionList.get(i).sList.get(j).clone());
@@ -147,33 +152,33 @@ public class EquationSolver {
 //                    solutionB.sList.set(numSteps *2 + j, solution);
 //                }
 
-                solutionA.sList = loadBox(equation, solutionA.origin, solutionA.height, solutionA.width);
-                solutionB.sList = loadBox(equation, solutionB.origin, solutionB.height, solutionB.width);
+                solutionA.sList = loadBox(equation, solutionA.origin, solutionA.height, solutionA.width, 0);
+                solutionB.sList = loadBox(equation, solutionB.origin, solutionB.height, solutionB.width, 0);
 
                 boolean aValid = solutionA.sList != null;
                 boolean bValid = solutionB.sList != null;
 
-                if(aValid){
-                    printSolveList(solutionA.sList);
-                    plotRot(solutionA.sList);
-                }
-                if(bValid){
-                    printSolveList(solutionB.sList);
-                    plotRot(solutionB.sList);
-                }
+//                if(aValid){
+//                    printSolveList(solutionA.sList);
+//                    plotRot(solutionA.sList);
+//                }
+//                if(bValid){
+//                    printSolveList(solutionB.sList);
+//                    plotRot(solutionB.sList);
+//                }
 
                 if(aValid && windingValid(solutionA.sList)){
                     solutionList.set(i, solutionA);
-                    System.out.println("HERE1");
+//                    System.out.println("HERE1");
                     if(bValid && windingValid(solutionB.sList)){
-                        System.out.println("HERE2");
+//                        System.out.println("HERE2");
                         solutionList.add(solutionB);
                     }
                 }
                 else if(bValid && windingValid(solutionB.sList)){
                     solutionList.set(i, solutionB);
 
-                    System.out.println("HERE3");
+//                    System.out.println("HERE3");
                 }
                 else{
                     shift++;
@@ -214,33 +219,33 @@ public class EquationSolver {
                 |_______________|
                  */
 
-                solutionA.sList = loadBox(equation, solutionA.origin, solutionA.height, solutionA.width);
-                solutionB.sList = loadBox(equation, solutionB.origin, solutionB.height, solutionB.width);
+                solutionA.sList = loadBox(equation, solutionA.origin, solutionA.height, solutionA.width, 0);
+                solutionB.sList = loadBox(equation, solutionB.origin, solutionB.height, solutionB.width, 0);
 
                 boolean aValid = solutionA.sList.size() != 0;
                 boolean bValid = solutionB.sList.size() != 0;
 
-                if(aValid){
-                    printSolveList(solutionA.sList);
-                    plotRot(solutionA.sList);
-                }
-                if(bValid){
-                    printSolveList(solutionB.sList);
-                    plotRot(solutionB.sList);
-                }
+//                if(aValid){
+//                    printSolveList(solutionA.sList);
+//                    plotRot(solutionA.sList);
+//                }
+//                if(bValid){
+//                    printSolveList(solutionB.sList);
+//                    plotRot(solutionB.sList);
+//                }
 
                 if(aValid && windingValid(solutionA.sList)){
                     solutionList.set(i, solutionA);
-                    System.out.println("HERE1");
+//                    System.out.println("HERE1");
                     if(bValid && windingValid(solutionB.sList)){
-                        System.out.println("HERE2");
+//                        System.out.println("HERE2");
                         solutionList.add(solutionB);
                     }
                 }
                 else if(bValid && windingValid(solutionB.sList)){
                     solutionList.set(i, solutionB);
 
-                    System.out.println("HERE3");
+//                    System.out.println("HERE3");
                 }
                 else{
                     shift++;
@@ -251,7 +256,7 @@ public class EquationSolver {
         }
     }
 
-    public ArrayList<ComplexDouble> loadBox(EquationObject equation, ComplexDouble origin, double height, double width){
+    public ArrayList<ComplexDouble> loadBox(EquationObject equation, ComplexDouble origin, double height, double width, int mode){
 
 
         /*
@@ -290,7 +295,7 @@ public class EquationSolver {
 
 
             positionIteration = origin.i + (i*height/10);
-            System.out.println(positionIteration);
+//            System.out.println(positionIteration);
 
             input = new ComplexDouble(origin.r, positionIteration);
             sampleList.add(input);
@@ -303,7 +308,7 @@ public class EquationSolver {
 
 
             positionIteration = origin.r + (i*width/10);
-            System.out.println(positionIteration);
+//            System.out.println(positionIteration);
 
             input = new ComplexDouble(positionIteration, origin.i + height);
 
@@ -363,33 +368,37 @@ public class EquationSolver {
         }
 
 
-        System.out.println("PRINTING HERE!!!");
+//        System.out.println("PRINTING HERE!!!");
         for(int i = 0; i<10; i++){
 
             positionIteration = origin.r + width - (i*width/10);
 
             input = new ComplexDouble( positionIteration, origin.i);
-            System.out.println(positionIteration +"\t"+origin.i);
+//            System.out.println(positionIteration +"\t"+origin.i);
             sampleList.add(input);
             sList.add((equation.evaluator(input)));
 
         }
 
-        System.out.println("Printing PreSolveList: ");
-        printSolveList(sList);
+//        System.out.println("Printing PreSolveList: ");
+//        printSolveList(sampleList);
+//        System.out.println();
+//        printSolveList(sList);
 
                 int counter = 0;
-
+        if(mode==1){
+            return sampleList;
+        }
 
 
         for(int i=1; i < sList.size();i++){
 
 
             if(i > 55){
-                System.out.println("Printing SolveList: ");
-                System.out.println(sList.size());
-                printSolveList(sampleList);
-                printSolveList(sList);
+//                System.out.println("Printing SolveList: ");
+//                System.out.println(sList.size());
+//                printSolveList(sampleList);
+//                printSolveList(sList);
 //                while(true);
 
             }
@@ -410,8 +419,8 @@ public class EquationSolver {
                 angle2 += Math.PI * 2;
             }
 
-            System.out.println(i);
-            System.out.println(angle1);
+//            System.out.println(i);
+//            System.out.println(angle1);
 
 
             double measuredAngleDiff = Math.abs(angle1 - angle2);
@@ -420,23 +429,25 @@ public class EquationSolver {
             if(otherMeasuredAngleDiff < measuredAngleDiff){
                 measuredAngleDiff = otherMeasuredAngleDiff;
             }
-            System.out.println(measuredAngleDiff);
+//            System.out.println(measuredAngleDiff);
 
-
+//            System.out.println(sampleList.get(i) + "\t" + sList.get(i));
+//            System.out.println(sampleList.get(i-1) + "\t" + sList.get(i-1));
+//            System.out.println(Math.atan2(sList.get(i-1).i, sList.get(i-1).r));
+//            System.out.println(measuredAngleDiff);
+//            System.out.println("Angle1: " + angle1);
+//            System.out.println("Angle2: " + angle2);
 
             if(measuredAngleDiff > Math.PI/6){ // PI/12 is the minimum distance between points
                 counter ++;
-                System.out.println(sampleList.get(i) + "\t" + sList.get(i));
-                System.out.println(sampleList.get(i-1) + "\t" + sList.get(i-1));
-                System.out.println(Math.atan2(sList.get(i-1).i, sList.get(i-1).r));
-                System.out.println("Angle1: " + angle1);
-                System.out.println("Angle2: " + angle2);
+
+//                System.out.println("pass");
 
 
                 ComplexDouble samplePoint = new ComplexDouble((sampleList.get(i).r+ sampleList.get(i-1).r) / 2, (sampleList.get(i).i+ sampleList.get(i-1).i)/2);
                 sampleList.add(i, samplePoint);
                 sList.add(i, (equation.evaluator(samplePoint)));
-                System.out.println(sList.get(i));
+//                System.out.println(sList.get(i));
                 i = 0;
             }
 
@@ -446,44 +457,10 @@ public class EquationSolver {
 
 
 
+        if(mode==2){
+            printSolveList(sList);
+        }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-//        for(int i = 0; i < numSteps; i++){
-//            ComplexDouble input = new ComplexDouble(origin.r + (i*width/numSteps),  origin.i + height);
-//            sList.add((equation.evaluator(input)));
-//
-//        }
-//        for(int i = 0; i < numSteps; i++){
-//            ComplexDouble input = new ComplexDouble(origin.r + width,  origin.i + height - (i*height/numSteps));
-//            sList.add((equation.evaluator(input)));
-//
-//        }
-//        for(int i = 0; i < numSteps; i++){
-//            ComplexDouble input = new ComplexDouble(origin.r + width - (i*width/numSteps),  origin.i);
-//            sList.add((equation.evaluator(input)));
-//
-//        }
-
-        System.out.println("Printing ASDFSolveList: ");
-        printSolveList(sList);
-        plotRot(sList);
-
-//        for(int i = 0; i < 1; i++){
-//            while(true);
-//
-//        }
 
         return sList;
     }
@@ -626,7 +603,7 @@ public class EquationSolver {
         }
 
 
-        System.out.println("WINDING: "+  winding);
+//        System.out.println("WINDING: "+  winding);
         return (winding != 0);
     }
 

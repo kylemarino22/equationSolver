@@ -142,12 +142,13 @@ public class EquationLoader extends StringManipulator{
          */
 //        compileEquation(s);
         String asd = "((2*x)*(4*x^2-23)+(4*x))^2*(x-3)";
-        String p = "(2.7182818284^(7*3.14159265/12*((x^2-3)^0.5)))^2";
+        String p = "((2.7182818284^(7*3.14159265/12*((x^2-3)^0.5)))^2)*((x/3)-((x^2-3)^0.5)/3)-((x/3)-((x^2-3)^0.5)/3)";
         String asad = "(2.718281828459045^(5*x))-1";
-//        String da = "(2.7182818284^(7*3.14159265/12*((x^2-3)^0.5)))^2";
+        String da = "(2.7182818284^(7*3.14159265/12*((x^2-3)^0.5)))^2-1";
         String ba = "(x^2)-(4*x)+5";
         String ta = "(9i*x)^2+2i";
         String pa = "3.2i*(x^2)+(4*x)-2i";
+        String na = "(4-(x^3))/2i";
         String jamir = "x+3i";
         //()
 
@@ -169,7 +170,7 @@ public class EquationLoader extends StringManipulator{
 //        System.out.println(equation.evaluator(new ComplexDouble(2, -1)));
 //        System.out.println(equation.evaluator(new ComplexDouble(0.12616, 123.32)));
 //        System.out.println(equation.evaluator(new ComplexDouble(-0.645, 356.61)));
-//        System.out.println(equation.evaluator(new ComplexDouble(0.23412351341, -0.0102301023)));
+        System.out.println(equation.evaluator(new ComplexDouble(0.23412351341, -0.0102301023)));
 //        System.out.println(equation.evaluator(new ComplexDouble(1.73205080756887729352, 0)));
 //
 //        System.out.println();
