@@ -193,6 +193,12 @@ public class EquationLoader extends StringManipulator{
 
     }
 
+    public static void setup(String s){
+        preliminaryCompiler(imaginaryParser(s));
+//        System.out.println(equation.toString());
+        subCompiler();
+    }
+
     private static String imaginaryParser(String input){
         //4*(((1+2i)*(3+5i))^(-3i)+(6-3i))^(3.23*x-3i)-13.23+0.434i
         //<4,0>*((<1,2>*<3,5>^x)^<0,-3>+<6,3>)^(<3.23,0>*x+<0,-3>)+<-13.23,0.434>

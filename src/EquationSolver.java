@@ -24,8 +24,8 @@ public class EquationSolver {
 
     //Box
     private static ComplexDouble origin = new ComplexDouble(-2.01,-2.01);
-    private static double height = 4;
-    private static double width = 4;
+    private static double height = 8;
+    private static double width = 8;
     private static int numSteps = 12;
 
 
@@ -66,7 +66,7 @@ public class EquationSolver {
             //refine solutionlist --> new solutionList
 //            System.out.println("HAEAFasdf");
 
-            for (int i = 0; i < 105; i++) {
+            for (int i = 0; i < 100; i++) {
                 if(solutionList.size() != 0){
                     refineAnswers(solutionList, cutVert, equation);
                     cutVert = !cutVert;

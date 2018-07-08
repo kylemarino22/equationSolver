@@ -1,3 +1,7 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+
 public class Main {
 
     public static void main(String[] args) {
@@ -42,6 +46,36 @@ public class Main {
 
         */
 	// write your code here
-        EquationLoader.test();
+//        EquationLoader.test();
+
+
+
+        draw a = new draw();
+
+        JFrame f = new JFrame("Title");
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+//        GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment()
+//                .getDefaultScreenDevice();
+////        device.setFullScreenWindow(f);
+//
+//        device.setDisplayMode(new DisplayMode(2560, 1600, 32, 60));
+
+
+        java.awt.Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+
+
+
+
+        f.setSize((int) screenSize.getWidth(),(int) screenSize.getHeight());
+        f.setVisible(true);
+        f.add(a);
+        f.setFocusable(true);
+
+
+
+
+
+
     }
 }
