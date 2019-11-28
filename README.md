@@ -4,28 +4,29 @@ EquationSolver is a Java program that can approximate imaginary solutions to alm
 ## Program Examples
 Here are some examples of some equation solutions. 
 <br>
-* Euler's famous equation:
-`(2.7182818284^(x*1i))+1`<br>
-<img src="https://i.imgur.com/Zkslb1w.png" width="500" height="500"/> 
-<br>
-```
-Solutions:
-3.141592653658031  + 0 i
--3.141592653658031	+ 0 i
-```
-This solution is accurate to 10 decimal places.
-<br>
-* A discontinuous function:
-`((3*(x-5)^2+2)^0.5)-(2*(3-(x^2))^0.5)`<br>
-<img src="https://i.imgur.com/SCLCYhE.png" width="500" height="500"/> 
-<br>
-```
-Solutions:
-2.142857142857729 + 2.166535841158064 i
-2.142857142857729 - 2.166535841158064 i
-```
-This solution is accurate to 11 decimal places.
-<br>
+* Euler's famous equation: `(2.7182818284^(x*1i))+1`
+    > <img src="https://i.imgur.com/Zkslb1w.png" width="500" height="500"/> 
+    > <br>
+    > <br>
+    > 
+    > ```
+    > Solutions:
+    >  3.141592653658031 + 0 i
+    > -3.141592653658031 + 0 i
+    > ```
+    > This solution is accurate to 10 decimal places. 
+    > <br>
+* A discontinuous function: `((3*(x-5)^2+2)^0.5)-(2*(3-(x^2))^0.5)`
+    > <img src="https://i.imgur.com/SCLCYhE.png" width="500" height="500"/> 
+    > <br>
+    > <br>
+    > 
+    > ```
+    > Solutions:
+    > 2.142857142857729 + 2.166535841158064 i
+    > 2.142857142857729 - 2.166535841158064 i
+    > ```
+    > This solution is accurate to 11 decimal places.
 
 ## Equation Evaluator
 ### Class Descriptions
