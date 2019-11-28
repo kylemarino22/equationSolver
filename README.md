@@ -2,14 +2,28 @@
 EquationSolver is a Java program that can approximate imaginary solutions to almost analytical equation. It uses an approach inspired from the YouTube channel [3blue1brown](https://youtu.be/uJYGmMbkCIs). I developed my own library to handle complex number operations and designed a compiler that would parse a user-inputted equation into quickly executable instructions. This was an improvement that I thought of after designing a similar system in [Somsed](https://somsed.solutions). This program generates an image that describes the translation of the input space to the output space of the equation that it's solving.
 
 ## Program Examples
-Here are some examples of some equation solutions. <br>
-Euler's famous equation:
-`(2.71828^(x*i))+1`
-![](https://i.imgur.com/UuMCOIj.png)
+Here are some examples of some equation solutions. 
+<br>
+* Euler's famous equation:
+`(2.7182818284^(x*1i))+1`<br>
+<img src="https://i.imgur.com/Zkslb1w.png" width="500" height="500"/> 
+<br>
+```
 Solutions:
+3.141592653658031  + 0 i
+-3.141592653658031	+ 0 i
 ```
-
+This solution is accurate to 10 decimal places.
+<br>
+* A discontinuous function:
+`((3*(x-5)^2+2)^0.5)-(2*(3-(x^2))^0.5)`
+<img src="https://i.imgur.com/SCLCYhE.png" width="500" height="500"/> 
+<br>
+Solutions:
+2.142857142857729 + 2.166535841158064 i
+2.142857142857729 - 2.166535841158064 i
 ```
+This solution is accurate to 11 decimal places.
 
 ## Equation Evaluator
 ### Class Descriptions
