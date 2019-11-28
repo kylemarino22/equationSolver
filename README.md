@@ -39,7 +39,7 @@ SubEquation.java
 ```
 
 ##### ComplexDouble.java
-The ComplexDouble class is used to describe a complex number. It has has a real and imaginary component, as well as custom methonds for addition, subtraction, multiplication, division, and exponentiation. All operations involve simple algebra except [exponentiation](http://mathworld.wolfram.com/ComplexExponentiation.html)
+The ComplexDouble class is used to describe a complex number. It has has a real and imaginary component, as well as custom methonds for addition, subtraction, multiplication, division, and exponentiation. All operations involve simple algebra except [exponentiation](http://mathworld.wolfram.com/ComplexExponentiation.html).
 
 ##### SubEquation.java
 The SubEquation class is an intermediate data structure used to organized parts of the EquationObject class. Each SubEquation stores the literal string used to describe the equation, and the list of instructions used to compute the value of that SubEquation. 
