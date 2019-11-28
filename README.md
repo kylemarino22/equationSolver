@@ -16,18 +16,20 @@ Solutions:
 This solution is accurate to 10 decimal places.
 <br>
 * A discontinuous function:
-`((3*(x-5)^2+2)^0.5)-(2*(3-(x^2))^0.5)`
+`((3*(x-5)^2+2)^0.5)-(2*(3-(x^2))^0.5)`<br>
 <img src="https://i.imgur.com/SCLCYhE.png" width="500" height="500"/> 
 <br>
+```
 Solutions:
 2.142857142857729 + 2.166535841158064 i
 2.142857142857729 - 2.166535841158064 i
 ```
 This solution is accurate to 11 decimal places.
+<br>
 
 ## Equation Evaluator
 ### Class Descriptions
-Before solving any functions, it is first necessary to be able to evaluate a function at a given input ```x```. To solve complex functions, it needs to be able to evaluate a function at a point ```a+bi```. This functionality is achieved through the classes: 
+Before solving any functions, it is first necessary to be able to evaluate a function at a given point ```a+bi```. The pipeline of this process is to deconstruct the string input equation into instructions that the program can evaluate. This offers a performance speed over parsing the input for every evaluation. This functionality is achieved through folloiwng the classes: 
 ```
 ComplexDouble.java
 EquationLoader.java
