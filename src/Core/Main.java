@@ -1,6 +1,8 @@
+package Core;
+
+import GUI.DisplayManager;
+
 import javax.swing.*;
-import java.awt.*;
-import java.awt.image.BufferedImage;
 
 public class Main {
 
@@ -46,34 +48,17 @@ public class Main {
 
         */
 	// write your code here
+//        Evaluator.EquationLoader.test();
+
+
+
+        DisplayManager display = new DisplayManager();
+
+
+
+
+
 //        EquationLoader.test();
-
-
-
-        draw a = new draw();
-
-        JFrame f = new JFrame("Title");
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-//        GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment()
-//                .getDefaultScreenDevice();
-////        device.setFullScreenWindow(f);
-//
-//        device.setDisplayMode(new DisplayMode(2560, 1600, 32, 60));
-
-
-        java.awt.Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
-
-
-
-
-        f.setSize((int) screenSize.getWidth(),(int) screenSize.getHeight());
-        f.setVisible(true);
-        f.add(a);
-        f.setFocusable(true);
-
-
-
 
 
 

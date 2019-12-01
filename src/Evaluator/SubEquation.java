@@ -1,4 +1,5 @@
-import java.lang.reflect.Array;
+package Evaluator;
+
 import java.util.ArrayList;
 
 public class SubEquation {

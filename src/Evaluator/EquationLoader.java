@@ -1,19 +1,19 @@
-import com.sun.javafx.scene.traversal.SubSceneTraversalEngine;
+package Evaluator;
 
-public class EquationLoader extends StringManipulator{
+import Utils.ComplexDouble;
+import Utils.StringManipulator;
+
+public class EquationLoader extends StringManipulator {
 
     private static String mainString = "Hello ((( asdfa ((( hell)o world";
 
-    public static EquationObject equation = new EquationObject();
+    public static EquationObject equation;
 
     public static void setMainString(String s){
         mainString = s;
     }
 
     public static void test(){
-
-        String s = "";
-        String as = "(3*(x-5)^2+2)^0.5-2*(3-x^2)^0.5";
 
         /*
 
@@ -79,7 +79,7 @@ public class EquationLoader extends StringManipulator{
         0000 0000 ---- 0000 possible variables 0000 - 1111, 1000 is x, 1111 is previous answer
         0000 0000 0000 -000 negative or positive
 
-        SubEquation Compilation:
+        Evaluator.SubEquation Compilation:
         command: 1000 0000 0000 0000 a 0.0 -5.0  x-5     --> [t1]
         command: 0100 0000 0000 0000 e 0.0 2.0  [t1]^2   --> t
         command: 0000 0000 1111 0000 m 3.0 0.0   3*t     --> t
@@ -122,10 +122,10 @@ public class EquationLoader extends StringManipulator{
 
         0 = i, 1 = x, 10 = t
                    |
-        0000 0000 0000 0000
-        SubEquation Compilation:
+        0000 0000 0-00 0000
+        Evaluator.SubEquation Compilation:
         command: 0100 0000 0000 0010 op: e dest: 1000 0000   | [i2]^x --> t
-        command: 1000 0000 0000 0001 op: * dest: 1000 0001   | [i1]*t --> t1
+        command: 1000 0000 0000 0001 op: m dest: 1000 0001   | [i1]*t --> t1
 
         command: 0000 0011 1000 0001 op: e dest: 1000 0000   | [t1]^[i3] --> t
         command: 0000 0100 1000 0000 op: a dest: 1000 0010   | t+[i4] --> t2
@@ -136,26 +136,26 @@ public class EquationLoader extends StringManipulator{
         Equation Compilation
         command: 1000 0010 1000 0011 op: e dest: 1000 0000   | [t2]^[t3] --> t
         command: 1000 0000 0000 0000 op: m dest: 1000 0000   | [i0]*t --> t
-        command: 0000 0111 1000 0000 op: m dest: 1000 0000   | t+[i7] --> t
+        command: 0000 0111 1000 0000 op: a dest: 1000 0000   | t+[i7] --> t
 
 
          */
 //        compileEquation(s);
-        String asd = "((2*x)*(4*x^2-23)+(4*x))^2*(x-3)";
-        String p = "((2.7182818284^(7*3.14159265/12*((x^2-3)^0.5)))^2)*((x/3)-((x^2-3)^0.5)/3)-((x/3)-((x^2-3)^0.5)/3)";
-        String asad = "(2.718281828459045^(5*x))-1";
-        String da = "(2.7182818284^(7*3.14159265/12*((x^2-3)^0.5)))^2-1";
-        String ba = "(x^2)-(4*x)+5";
-        String ta = "(9i*x)^2+2i";
-        String pa = "3.2i*(x^2)+(4*x)-2i";
-        String na = "(4-(x^3))/2i";
-        String jamir = "x+3i";
+        String test1 = "((2*x)*(4*x^2-23)+(4*x))^2*(x-3)";
+        String test2 = "((2.7182818284^(7*3.14159265/12*((x^2-3)^0.5)))^2)*((x/3)-((x^2-3)^0.5)/3)-((x/3)-((x^2-3)^0.5)/3)";
+        String test3 = "(2.718281828459045^(5*x))-1";
+        String test4 = "(2.7182818284^(7*3.14159265/12*((x^2-3)^0.5)))^2-1";
+        String test5 = "(x^2)-(4*x)+5";
+        String test6 = "(2.7182818284^(x*1i))+1";
+        String test7 = "3.2i*(x^2)+(4*x)-2i";
+        String test8 = "(4-(x^3))/2i";
+        String test9 = "((3*(x-5)^2+2)^0.5)-(2*(3-(x^2))^0.5)";
         //()
 
         //(-0.002926826477 + 2.95898723)
 //        ((2.7182818284^(7*3.14159265/12*((x^2-3)^0.5)))^2)*((x/3)-((x^2-3)^0.5)/3)-((x/3)-((x^2-3)^0.5)/3)
 
-        preliminaryCompiler(imaginaryParser(ta));
+        preliminaryCompiler(imaginaryParser(test9));
 //        System.out.println(equation.toString());
         subCompiler();
 //        System.out.println("\n");
@@ -165,35 +165,36 @@ public class EquationLoader extends StringManipulator{
 ////        System.out.println(leftofOperator(2, s));
         //(9.3+5.3i)
 
-//        System.out.println(equation.evaluator(new ComplexDouble(0, 0)));
-//        System.out.println(ComplexDouble.pwr(new ComplexDouble(0,0), new ComplexDouble(2,0)));
-//        System.out.println(equation.evaluator(new ComplexDouble(2, -1)));
-//        System.out.println(equation.evaluator(new ComplexDouble(0.12616, 123.32)));
-//        System.out.println(equation.evaluator(new ComplexDouble(-0.645, 356.61)));
-        System.out.println(equation.evaluator(new ComplexDouble(0.23412351341, -0.0102301023)));
-//        System.out.println(equation.evaluator(new ComplexDouble(1.73205080756887729352, 0)));
+//        System.out.println(equation.evaluator(new Utils.ComplexDouble(0, 0)));
+//        System.out.println(Utils.ComplexDouble.pwr(new Utils.ComplexDouble(0,0), new Utils.ComplexDouble(2,0)));
+//        System.out.println(equation.evaluator(new Utils.ComplexDouble(2, -1)));
+//        System.out.println(equation.evaluator(new Utils.ComplexDouble(0.12616, 123.32)));
+//        System.out.println(equation.evaluator(new Utils.ComplexDouble(-0.645, 356.61)));
+//        System.out.println(equation.evaluator(new Utils.ComplexDouble(0.23412351341, -0.0102301023)));
+//        System.out.println(equation.evaluator(new Utils.ComplexDouble(1.73205080756887729352, 0)));
 //
 //        System.out.println();
-//        EquationSolver.loadBox(equation);
+//        Evaluator.EquationSolver.loadBox(equation);
 
-//        System.out.println(equation.evaluator(new ComplexDouble(0, -2.513274122926427)));
+//        System.out.println(equation.evaluator(new Utils.ComplexDouble(0, -1.1557289045985133)));
 //
 //        while(true);
         EquationSolver asdf = new EquationSolver();
         asdf.solve(equation);
 //        System.out.println();
-//        EquationSolver.printSolveList();
+//        Evaluator.EquationSolver.printSolveList();
 //        System.out.println();
 //        asdf.printSolveList(asdf.sL);
-////        asdf.plotRot();
+//        asdf.plotRot();
 //        System.out.println();
-//        System.out.println(equation.evaluator(new ComplexDouble(2, 1)));
-//        System.out.println(EquationSolver.windingValid());
+//        System.out.println(equation.evaluator(new Utils.ComplexDouble(2, 1)));
+//        System.out.println(Evaluator.EquationSolver.windingValid());
 
 
     }
 
     public static void setup(String s){
+        equation = new EquationObject();
         preliminaryCompiler(imaginaryParser(s));
 //        System.out.println(equation.toString());
         subCompiler();
@@ -235,8 +236,6 @@ public class EquationLoader extends StringManipulator{
                     input = input.substring(0,openPos) +"{" + workString.substring(1, workString.length()-1)+"}"+ input.substring(closePos+1);
                     break;
                 }
-
-                System.out.println("IM HERESASDFASDFASDf");
 
                 //if the only operator is + or -
 
@@ -316,7 +315,6 @@ public class EquationLoader extends StringManipulator{
             }
 
 
-            System.out.println("TESTING");
             System.out.println(workString);
             System.out.println(input);
         }

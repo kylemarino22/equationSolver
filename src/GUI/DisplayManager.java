@@ -1,21 +1,50 @@
+package GUI;
+
+import GUI.GraphicsUtils.GUIKeyListener;
+import GUI.GraphicsUtils.GUIMouseListener;
+import GUI.GraphicsUtils.NullCanvasException;
+import GUI.GraphicsUtils.TextField;
+
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 
-public class draw extends JPanel implements ActionListener, FocusListener, MouseListener {
+public class DisplayManager extends JPanel implements ActionListener, FocusListener, MouseListener {
 
     private Graphics g;
 
-    private ImageLoader iL;
 
     BufferedImage canvas;
 
-    public draw(){
+    public DisplayManager(){
         addFocusListener(this);
         addMouseListener(this);
-        iL = new ImageLoader(768,768);
+
+        JFrame f = new JFrame("Title");
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
+
+        int scrW = env.getMaximumWindowBounds().width;
+        int scrH = env.getMaximumWindowBounds().height;
+
+
+        f.setSize(scrW,scrH);
+        f.add(this);
+        f.setFocusable(true);
+        f.setVisible(true);
+        GUIMouseListener mouselisten = new GUIMouseListener();
+        GUIKeyListener keyListen = new GUIKeyListener();
+        addMouseListener (mouselisten);
+        addMouseMotionListener (mouselisten);
+        addKeyListener (keyListen);
+
+        int contentSizeW = f.getContentPane().getSize().width;
+        int contentSizeH = f.getContentPane().getSize().height;
+
+
+        GUI.setup(contentSizeW,contentSizeH);
+
     }
 
     public void mousePressed(MouseEvent evt) {
@@ -60,22 +89,12 @@ public class draw extends JPanel implements ActionListener, FocusListener, Mouse
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON);
 
-        this.setBackground(new Color(224, 219, 208));
-
-        g2.setColor(Color.RED);
-
-
-        canvas = iL.updateImage();
-
-        if(canvas == null){
-            while(true);
+        try {
+            GUI.render(g2);
+        } catch (NullCanvasException e) {
+            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
-
-        g2.setColor(Color.BLACK);
-        g2.fillRect(0,0,768,768);
-        g2.drawImage(canvas, null, null);
-
-
 
         tm.start();
 

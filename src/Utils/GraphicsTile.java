@@ -1,4 +1,8 @@
-import java.awt.*;
+package Utils;
+
+import Utils.ComplexDouble;
+import Utils.Pixel;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -9,7 +13,7 @@ public class GraphicsTile {
     private double width;
     private double height;
 
-    ArrayList<Pixel> pixelList = new ArrayList<>();
+    private ArrayList<Pixel> pixelList = new ArrayList<>();
 
 
     public GraphicsTile(Pixel p, int height, int width, double originX, double originY, double numHeight, double numWidth){
@@ -42,6 +46,10 @@ public class GraphicsTile {
         return p;
     }
 
+    public int getPixelListSize () {
+        return pixelList.size();
+    }
+
     public ComplexDouble getComplexDouble(Pixel p){
         //origin + pixelNum/TotalPixels * full width of box
 
@@ -58,15 +66,6 @@ public class GraphicsTile {
         return new Pixel(tile.pos.x + p.x, tile.pos.y + p.y);
 
     }
-
-    //you smell good
-    //did I not before?
-
-    //What did it fieel like coming back
-    //Itchy, it felt weird in so many ways
-
-    //This isn't the plan
-    //No, this is the team
 
 
 

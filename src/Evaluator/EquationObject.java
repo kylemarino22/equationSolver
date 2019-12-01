@@ -1,3 +1,8 @@
+package Evaluator;
+
+import Utils.ComplexDouble;
+import Utils.StringManipulator;
+
 import java.util.ArrayList;
 
 public class EquationObject {
@@ -179,7 +184,7 @@ public class EquationObject {
 
 
 //
-//    private double evalM(Operator op, double x, double t){
+//    private double evalM(Evaluator.Operator op, double x, double t){
 //        double a, b;
 //        if((op.getCommand() | 65520) == 65520){
 //            //default number
@@ -228,7 +233,7 @@ public class EquationObject {
 //        return a*b;
 //    }
 //
-//    private double evalA(Operator op, double x, double t){
+//    private double evalA(Evaluator.Operator op, double x, double t){
 //
 //        double a, b;
 //        if((op.getCommand() | 65520) == 65520){

@@ -1,3 +1,5 @@
+package Evaluator;
+
 public class Operator {
 
     private char op;

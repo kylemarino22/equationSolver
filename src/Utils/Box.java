@@ -1,4 +1,6 @@
-import java.awt.*;
+package Utils;
+
+import Utils.Pixel;
 
 public class Box {
 

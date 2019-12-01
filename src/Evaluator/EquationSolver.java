@@ -1,6 +1,8 @@
-import com.sun.javafx.scene.traversal.SubSceneTraversalEngine;
+package Evaluator;
 
-import java.lang.reflect.Array;
+import Utils.ComplexDouble;
+import Utils.Polar;
+
 import java.util.ArrayList;
 
 public class EquationSolver {
@@ -22,14 +24,14 @@ public class EquationSolver {
 
 
 
-    //Box
+    //Utils.Box
     private static ComplexDouble origin = new ComplexDouble(-2.01,-2.01);
     private static double height = 8;
     private static double width = 8;
     private static int numSteps = 12;
 
 
-//    private static ArrayList<ComplexDouble> solveList = new ArrayList<>(); //imaginary numbers
+//    private static ArrayList<Utils.ComplexDouble> solveList = new ArrayList<>(); //imaginary numbers
 
     private solveList originalSolveList = new solveList(origin, height, width);
     private static ArrayList<ComplexDouble> finalList = new ArrayList<>(); //imaginary numbers
@@ -38,7 +40,6 @@ public class EquationSolver {
 
 
     public void solve(EquationObject equation){
-//        System.out.println("asdfasdfasdf");
         //loadBox
         printSolveList(loadBox(equation, origin, height, width, 0));
         originalSolveList.sList = loadBox(equation, origin, height, width, 1);
@@ -46,7 +47,6 @@ public class EquationSolver {
 //        printSolveList(originalSolveList.sList);
 
         //if is winding
-//        System.out.println("HAHAHAHA");
         if(originalSolveList.sList != null) {
             //print sample area
             printSolveList(loadBox(equation, origin, height, width, 1));
@@ -64,7 +64,6 @@ public class EquationSolver {
             boolean cutVert = true;
 
             //refine solutionlist --> new solutionList
-//            System.out.println("HAEAFasdf");
 
             for (int i = 0; i < 100; i++) {
                 if(solutionList.size() != 0){
@@ -80,7 +79,7 @@ public class EquationSolver {
                     System.out.println(centerBox(solutionList.get(i).origin, solutionList.get(i).height, solutionList.get(i).width));
                 }
 
-//                printSolveList(solutionList.get(0).sList);
+                printSolveList(solutionList.get(0).sList);
 
             }
 
@@ -143,9 +142,9 @@ public class EquationSolver {
 
 //                for(int j = 0; j < numSteps; j++){
 //                    //(j*height/numSteps)
-//                    ComplexDouble input = new ComplexDouble(solutionList.get(i).origin.r + solutionList.get(i).width,  solutionList.get(i).origin.i + (j*height/numSteps));
+//                    Utils.ComplexDouble input = new Utils.ComplexDouble(solutionList.get(i).origin.r + solutionList.get(i).width,  solutionList.get(i).origin.i + (j*height/numSteps));
 //                    System.out.println(input.toString());
-//                    ComplexDouble solution = equation.evaluator(input);
+//                    Utils.ComplexDouble solution = equation.evaluator(input);
 //
 //                    //set border
 //                    solutionA.sList.set(j, solution);
@@ -213,17 +212,18 @@ public class EquationSolver {
                 /*
                  _______________
                 |               |
-                |               |
+                |       A       |
                 |_______________|
                 |               |
+                |       B       |
                 |_______________|
                  */
 
                 solutionA.sList = loadBox(equation, solutionA.origin, solutionA.height, solutionA.width, 0);
                 solutionB.sList = loadBox(equation, solutionB.origin, solutionB.height, solutionB.width, 0);
 
-                boolean aValid = solutionA.sList.size() != 0;
-                boolean bValid = solutionB.sList.size() != 0;
+                boolean aValid = solutionA.sList != null;;
+                boolean bValid = solutionB.sList != null;;
 
 //                if(aValid){
 //                    printSolveList(solutionA.sList);
@@ -284,11 +284,11 @@ public class EquationSolver {
         ComplexDouble input;
 
 //        //calculate 1st point
-//        ComplexDouble input = new ComplexDouble(origin.r, origin.i);
+//        Utils.ComplexDouble input = new Utils.ComplexDouble(origin.r, origin.i);
 //        sList.add((equation.evaluator(input)));
 //
 //        //calculate 2nd point
-//        input = new ComplexDouble(origin.r, origin.i + height/incrementScalar);
+//        input = new Utils.ComplexDouble(origin.r, origin.i + height/incrementScalar);
 //        sList.add((equation.evaluator(input)));
 //
         for(int i = 0; i < 10; i++){
@@ -317,7 +317,7 @@ public class EquationSolver {
 
         }
 //
-//        input = new ComplexDouble(origin.r + width, origin.i + height - height/incrementScalar);
+//        input = new Utils.ComplexDouble(origin.r + width, origin.i + height - height/incrementScalar);
 //        sList.add((equation.evaluator(input)));
 //
 //        System.out.println("\n\n");

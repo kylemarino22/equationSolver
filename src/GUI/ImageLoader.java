@@ -1,39 +1,54 @@
+package GUI;
+
+import Evaluator.*;
+import GUI.Events.NewEquationListener;
+import Utils.*;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-public class ImageLoader {
+import static GUI.Events.EventManager.addNewEquationListener;
+
+public class ImageLoader implements NewEquationListener{
 
 
     BufferedImage calculated;
-    BufferedImage finalImage;
 
-    private String mainString = "(x^2)+(4*x)+5";
+    private String equation = "(2.71828^(x*(0+1i)))+1";
     private ComplexDouble origin = new ComplexDouble(-4.01,-4.01);
-    private double height = 8;
-    private double width = 8;
+    private double planeHeight = 8;
+    private double planeWidth = 8;
+    private int imgHeight;
+    private int imgWidth;
 
-    private EquationLoader EL = new EquationLoader();
+    public EquationLoader EL = new EquationLoader();
 
     ArrayList<GraphicsTile> gtList = new ArrayList<>();
 
 
-    public ImageLoader(int width, int height) {
-        calculated = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        finalImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+    public ImageLoader(int imgWidth, int imgHeight) {
+        this.imgWidth = imgWidth;
+        this.imgHeight = imgHeight;
+        addNewEquationListener(this);
+        setupImage();
+    }
 
+    private void setupImage () {
         //generate graphics tiles
+        calculated = new BufferedImage(imgWidth, imgHeight, BufferedImage.TYPE_INT_ARGB);
 
-        int boxHeight = height/4;
-        int boxWidth = width/4;
 
-        double numWidth = this.width/4;
-        double numHeight = this.height/4;
+        int boxHeight = imgHeight/4;
+        int boxWidth = imgWidth/4;
+
+        double numWidth = this.planeWidth/4;
+        double numHeight = this.planeHeight/4;
 
         for(int i = 0; i < 4; i++){
             for(int j = 0; j < 4; j++){
                 gtList.add(new GraphicsTile(new Pixel(j*boxWidth, i*boxHeight), boxHeight, boxWidth,
-                    origin.r + numWidth * j, origin.i + numHeight * i,
+                        origin.r + numWidth * j, origin.i + numHeight * i,
                         numWidth, numHeight));
             }
 
@@ -41,41 +56,39 @@ public class ImageLoader {
 
         //setup equation
 
-        EquationLoader.setup(mainString);
+        EquationLoader.setup(equation);
     }
 
     public BufferedImage updateImage(){
 
-        //number of pixels per square before smoothing
-
-        boolean isNull = false;
         for(int j = 0; j < 32; j++){
             //iterate through tiles
-            for(int i = 0; i < 16; i++){
-                Pixel p = gtList.get(i).getAvailable();
+            //The last row of the pixel list won't have the max number of points because it is cutoff
+            if (gtList.get(0).getPixelListSize() != 0) {
+                for (int i = 0; i < 16; i++) {
 
-                if(p == null){
-                    isNull = true;
-                    break;
+                    Pixel p = gtList.get(i).getAvailable();
+                    if (p == null) continue;
+
+                    Pixel gP = gtList.get(i).globalPixel(p);
+                    ComplexDouble cd = gtList.get(i).getComplexDouble(p);
+
+                    Color temp = calcPixel(cd);
+                    calculated.setRGB(gP.x, gP.y, temp.getRGB());
                 }
-
-                Pixel gP = gtList.get(i).globalPixel(p);
-                ComplexDouble cd = gtList.get(i).getComplexDouble(p);
-
-
-                Color temp = calcPixel(cd);
-
-                calculated.setRGB(gP.x, gP.y, temp.getRGB());
+            } else {
+                return calculated;
             }
         }
 
-        if(isNull){
-            return null;
-        }
-
         return calculated;
-        //smoothing stuff
+    }
 
+    @Override
+    public void setNewEquation(String equation) {
+        this.equation = equation;
+        gtList = new ArrayList<>();
+        setupImage();
     }
 
     private Color calcPixel(ComplexDouble cd){

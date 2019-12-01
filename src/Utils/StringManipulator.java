@@ -1,3 +1,5 @@
+package Utils;
+
 public abstract class StringManipulator {
 
 
