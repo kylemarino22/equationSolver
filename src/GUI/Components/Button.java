@@ -1,8 +1,8 @@
-package GUI.GraphicsUtils;
+package GUI.Components;
 
 import java.awt.*;
 
-public class Button extends ClickableComponent{
+public class Button extends ClickableComponent {
 
     public clickFunction func;
     private Color highlightColor;
@@ -11,15 +11,21 @@ public class Button extends ClickableComponent{
 
     public Button (int x, int y, int height, int width) {
         super(x,y,height,width);
+        func = () -> {};
     }
 
     public void setDefaultColor (Color c) {
         defaultColor = c;
     }
 
+    public Color getDefaultColor () { return defaultColor; }
+
     public void setHighlightColor (Color c) {
         highlightColor = c;
     }
+
+    public Color getHighlightColor () { return highlightColor; }
+
 
     @Override
     public void onClick(int mouseX, int mouseY) {
@@ -29,6 +35,11 @@ public class Button extends ClickableComponent{
 
     @Override
     public void draw(Graphics2D g) {
+        colorManager();
+        super.draw(g);
+    }
+
+    public void colorManager () {
         if (isClicked) {
             color = new Color (defaultColor.getRed() + 60, defaultColor.getGreen(), defaultColor.getBlue() + 60);
         }
@@ -38,7 +49,6 @@ public class Button extends ClickableComponent{
         else {
             color = defaultColor;
         }
-        super.draw(g);
     }
 
     @Override

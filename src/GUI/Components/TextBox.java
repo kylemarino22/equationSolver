@@ -1,4 +1,4 @@
-package GUI.GraphicsUtils;
+package GUI.Components;
 
 public class TextBox extends Component{
 

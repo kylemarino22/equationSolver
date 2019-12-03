@@ -3,7 +3,6 @@ package GUI;
 import GUI.GraphicsUtils.GUIKeyListener;
 import GUI.GraphicsUtils.GUIMouseListener;
 import GUI.GraphicsUtils.NullCanvasException;
-import GUI.GraphicsUtils.TextField;
 
 import java.awt.*;
 import javax.swing.*;

@@ -1,6 +1,7 @@
 package GUI.GraphicsUtils;
 
-import javax.xml.soap.Text;
+import GUI.Components.TextField;
+
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
@@ -8,7 +9,7 @@ import java.util.ArrayList;
 public class GUIKeyListener implements KeyListener {
 
     private static ArrayList<TextField> fieldList = new ArrayList<>();
-    private static final char[] validChars = {'+', '-', '*', '/', '^', '@', '(', ')'};
+    private static final char[] validChars = {'+', '-', '*', '/', '^', '@', '(', ')','.'};
 
     public static void attachTextField (TextField f) {
         fieldList.add(f);

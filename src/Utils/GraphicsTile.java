@@ -16,7 +16,7 @@ public class GraphicsTile {
     private ArrayList<Pixel> pixelList = new ArrayList<>();
 
 
-    public GraphicsTile(Pixel p, int height, int width, double originX, double originY, double numHeight, double numWidth){
+    public GraphicsTile(Pixel p, double height, double width, double originX, double originY, double numHeight, double numWidth){
         tile = new Box(p, width, height);
         this.loc = new ComplexDouble(originX, originY);
         this.height = numHeight;

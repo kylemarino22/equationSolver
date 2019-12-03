@@ -1,8 +1,7 @@
-package GUI.GraphicsUtils;
+package GUI.Components;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.security.Key;
 
 import static GUI.GraphicsUtils.GUIKeyListener.attachTextField;
 
@@ -14,7 +13,7 @@ public class TextField extends ClickableComponent{
     private FontMetrics fm;
     private String defaultText = "";
 
-    private Button submitButton;
+    private GUI.Components.Button submitButton;
 
 
     public TextField (int x, int y, int height, int width) {

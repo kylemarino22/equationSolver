@@ -1,9 +1,5 @@
-package GUI.GraphicsUtils;
+package GUI.Components;
 
-import java.awt.*;
-import java.awt.geom.RoundRectangle2D;
-
-import static GUI.GraphicsUtils.CenterString.drawCenteredString;
 import static GUI.GraphicsUtils.GUIMouseListener.attachMouseComponent;
 
 public abstract class ClickableComponent extends Component{

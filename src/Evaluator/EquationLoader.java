@@ -141,12 +141,13 @@ public class EquationLoader extends StringManipulator {
 
          */
 //        compileEquation(s);
+        equation = new EquationObject();
         String test1 = "((2*x)*(4*x^2-23)+(4*x))^2*(x-3)";
         String test2 = "((2.7182818284^(7*3.14159265/12*((x^2-3)^0.5)))^2)*((x/3)-((x^2-3)^0.5)/3)-((x/3)-((x^2-3)^0.5)/3)";
         String test3 = "(2.718281828459045^(5*x))-1";
         String test4 = "(2.7182818284^(7*3.14159265/12*((x^2-3)^0.5)))^2-1";
         String test5 = "(x^2)-(4*x)+5";
-        String test6 = "(2.7182818284^(x*1i))+1";
+        String test6 = "x-3";
         String test7 = "3.2i*(x^2)+(4*x)-2i";
         String test8 = "(4-(x^3))/2i";
         String test9 = "((3*(x-5)^2+2)^0.5)-(2*(3-(x^2))^0.5)";
@@ -155,7 +156,7 @@ public class EquationLoader extends StringManipulator {
         //(-0.002926826477 + 2.95898723)
 //        ((2.7182818284^(7*3.14159265/12*((x^2-3)^0.5)))^2)*((x/3)-((x^2-3)^0.5)/3)-((x/3)-((x^2-3)^0.5)/3)
 
-        preliminaryCompiler(imaginaryParser(test9));
+        preliminaryCompiler(imaginaryParser(test6));
 //        System.out.println(equation.toString());
         subCompiler();
 //        System.out.println("\n");
@@ -167,7 +168,7 @@ public class EquationLoader extends StringManipulator {
 
 //        System.out.println(equation.evaluator(new Utils.ComplexDouble(0, 0)));
 //        System.out.println(Utils.ComplexDouble.pwr(new Utils.ComplexDouble(0,0), new Utils.ComplexDouble(2,0)));
-//        System.out.println(equation.evaluator(new Utils.ComplexDouble(2, -1)));
+        System.out.println(equation.evaluator(new ComplexDouble(0, 0)));
 //        System.out.println(equation.evaluator(new Utils.ComplexDouble(0.12616, 123.32)));
 //        System.out.println(equation.evaluator(new Utils.ComplexDouble(-0.645, 356.61)));
 //        System.out.println(equation.evaluator(new Utils.ComplexDouble(0.23412351341, -0.0102301023)));
@@ -539,7 +540,6 @@ public class EquationLoader extends StringManipulator {
                 equation.iList.set(aLoc, val);
 
                 workString = workString.substring(0, caratPos - leftLength) + "[i"+aLoc+"]" + workString.substring(caratPos + rightLength+1);
-                System.out.println("HEREEE");
                 System.out.println(workString);
 
             }

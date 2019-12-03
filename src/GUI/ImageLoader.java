@@ -14,13 +14,16 @@ public class ImageLoader implements NewEquationListener{
 
 
     BufferedImage calculated;
+//    BufferedImage finalImage;
 
-    private String equation = "(2.71828^(x*(0+1i)))+1";
-    private ComplexDouble origin = new ComplexDouble(-4.01,-4.01);
-    private double planeHeight = 8;
-    private double planeWidth = 8;
+    private String equation = "(2.71828^(x*(0+1i)))+1"; //(2.71828^(x*(0+1i)))+1
     private int imgHeight;
     private int imgWidth;
+
+    public static double planeXmin = -4;
+    public static double planeXmax = 4;
+    public static double planeYmin = -4;
+    public static double planeYmax = 4;
 
     public EquationLoader EL = new EquationLoader();
 
@@ -37,19 +40,33 @@ public class ImageLoader implements NewEquationListener{
     private void setupImage () {
         //generate graphics tiles
         calculated = new BufferedImage(imgWidth, imgHeight, BufferedImage.TYPE_INT_ARGB);
+        System.out.println(calculated.getRGB(0,0));
+//        finalImage = new BufferedImage(imgWidth, imgHeight, BufferedImage.TYPE_INT_ARGB);
 
+        int constBoxHeight = imgHeight/4;
+        int constBoxWidth = imgWidth/4;
+        int boxHeight;
+        int boxWidth;
 
-        int boxHeight = imgHeight/4;
-        int boxWidth = imgWidth/4;
-
-        double numWidth = this.planeWidth/4;
-        double numHeight = this.planeHeight/4;
+        double boxGridWidth = (planeXmax - planeXmin)/4;
+        double boxGridHeight = (planeYmax - planeYmin)/4;
 
         for(int i = 0; i < 4; i++){
             for(int j = 0; j < 4; j++){
-                gtList.add(new GraphicsTile(new Pixel(j*boxWidth, i*boxHeight), boxHeight, boxWidth,
-                        origin.r + numWidth * j, origin.i + numHeight * i,
-                        numWidth, numHeight));
+                //Fill up the last boxes to the image size
+                if (j==3) {
+                    boxWidth = imgWidth/4 + imgWidth % 4;
+                } else {
+                    boxWidth = imgWidth/4;
+                }
+                if (i==3) {
+                    boxHeight = imgHeight/4 + imgHeight % 4;
+                } else {
+                    boxHeight = imgHeight/4;
+                }
+                gtList.add(new GraphicsTile(new Pixel(j*constBoxWidth, i*constBoxHeight), boxHeight, boxWidth,
+                        planeXmin+ boxGridWidth * j, planeYmin + boxGridHeight * i,
+                        boxGridHeight, boxGridWidth));
             }
 
         }
@@ -63,8 +80,8 @@ public class ImageLoader implements NewEquationListener{
 
         for(int j = 0; j < 32; j++){
             //iterate through tiles
-            //The last row of the pixel list won't have the max number of points because it is cutoff
-            if (gtList.get(0).getPixelListSize() != 0) {
+            //15 will have the most pixels because of int division errors of the other graphicsTiles
+            if (gtList.get(15).getPixelListSize() != 0) {
                 for (int i = 0; i < 16; i++) {
 
                     Pixel p = gtList.get(i).getAvailable();
@@ -74,12 +91,20 @@ public class ImageLoader implements NewEquationListener{
                     ComplexDouble cd = gtList.get(i).getComplexDouble(p);
 
                     Color temp = calcPixel(cd);
-                    calculated.setRGB(gP.x, gP.y, temp.getRGB());
+                    //flip image vertically
+
+                    try {
+                        calculated.setRGB(gP.x, imgHeight-gP.y-1, temp.getRGB());
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                        System.out.println("a");
+                    }
                 }
             } else {
                 return calculated;
             }
         }
+
+//        smoothImage(calculated);
 
         return calculated;
     }
@@ -113,7 +138,7 @@ public class ImageLoader implements NewEquationListener{
 
 //        System.out.println(theta);
 
-        if(theta > 0 && theta < 60){
+        if(theta >= 0 && theta < 60){
             rgb =(int) (theta / 60 * 255);
             if(rgb > 255){
                 rgb = 255;
@@ -124,7 +149,7 @@ public class ImageLoader implements NewEquationListener{
             return new Color (rgb, 255, 0);
         }
 
-        else if(theta > 60 && theta < 120){
+        else if(theta >= 60 && theta < 120){
             rgb =(int) ((theta - 60) / 60 * 255);
             if(rgb > 255){
                 rgb = 255;
@@ -135,7 +160,7 @@ public class ImageLoader implements NewEquationListener{
             return new Color (255, 255 - rgb, 0);
         }
 
-        else if(theta > 120 && theta < 180){
+        else if(theta >= 120 && theta < 180){
             rgb =(int) ((theta - 120) / 60 * 255);
             if(rgb > 255){
                 rgb = 255;
@@ -147,7 +172,7 @@ public class ImageLoader implements NewEquationListener{
             return new Color (255, 0, rgb);
         }
 
-        else if(theta > 180 && theta < 240){
+        else if(theta >= 180 && theta < 240){
             rgb =(int) ((theta - 180) / 60 * 255);
             if(rgb > 255){
                 rgb = 255;
@@ -158,7 +183,7 @@ public class ImageLoader implements NewEquationListener{
             return new Color (255 - rgb, 0, 255);
         }
 
-        else if(theta > 240 && theta < 300){
+        else if(theta >= 240 && theta < 300){
             rgb =(int) ((theta - 240) / 60 * 255);
             if(rgb > 255){
                 rgb = 255;
@@ -179,5 +204,48 @@ public class ImageLoader implements NewEquationListener{
             return new Color (0, 255, 255-rgb);
         }
     }
+
+    //This runs too slow
+//    //outputs into finalImage
+//    void smoothImage (BufferedImage img) {
+//        //i is row, j is col
+//
+//        for (int i = 0; i < finalImage.getHeight(); i++) {
+//            for (int j = 0; j < finalImage.getWidth(); j++) {
+//                if (img.getRGB(j,i) != 0) {
+//                    finalImage.setRGB(j,i,img.getRGB(j,i));
+//                    continue;
+//                }
+//                //9x9 grid around each pixel.
+//                int numPixelAverage = 0;
+//                int r = 0, g = 0, b = 0, a = 0;
+//                for (int k = Integer.max(0, i-4); k < Integer.min(finalImage.getHeight(), i+4); k++) {
+//                    for (int l = Integer.max(0,j-4); l < Integer.min(finalImage.getWidth(), j+4); l++) {
+//
+//                        if (img.getRGB(l,k) == 0) {
+//                            continue;
+//                        }
+//                        Color rgb = new Color(img.getRGB(l,k));
+//                        r += rgb.getRed();
+//                        g += rgb.getGreen();
+//                        b += rgb.getBlue();
+//                        a += rgb.getAlpha();
+//                        numPixelAverage++;
+//                    }
+//                }
+//                if (numPixelAverage == 0) {
+//                    finalImage.setRGB(j,i, 0);
+//                    continue;
+//                }
+//                r /= numPixelAverage;
+//                g /= numPixelAverage;
+//                b /= numPixelAverage;
+//                a /= numPixelAverage;
+//
+//                finalImage.setRGB(j,i, new Color (r,g,b,a).getRGB());
+//
+//            }
+//        }
+//    }
 
 }

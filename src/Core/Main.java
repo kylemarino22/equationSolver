@@ -1,5 +1,6 @@
 package Core;
 
+import Evaluator.EquationLoader;
 import GUI.DisplayManager;
 
 import javax.swing.*;
@@ -49,7 +50,8 @@ public class Main {
         */
 	// write your code here
 //        Evaluator.EquationLoader.test();
-
+//        EquationLoader.setup("x-3");
+//        EquationLoader.test();
 
 
         DisplayManager display = new DisplayManager();
